@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="@Href("~/favicon.ico")" type="image/x-icon">
+    @*<link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />*@
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="keywords" content="trung thanh, trung thanh express, express, vận chuyển, chuyển phát, bưu phẩm">
+  <meta name="description" content="Công Ty TNHH Thương Mại -  Vận Chuyển Trung Thành">
+  <link rel="stylesheet" href="@Url.Content("~/Content/moo_maximenuH_CK.css")" type="text/css">
+  <link rel="stylesheet" href="@Url.Content("~/Content/maximenuH_CK.css")" type="text/css">
+  <script src="@Url.Content("~/Scripts/js/libs/jquery-1.6.2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.11.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jcarousellite_1.0.1.min.js")" type="text/javascript"></script>
+  <script src="@Url.Content("~/Scripts/Views/Shared/ga.js")" async="" type="text/javascript"></script><script src="@Url.Content("~/Scripts/Views/Shared/mootools-core.js")" type="text/javascript"></script>
+  <script src="@Url.Content("~/Scripts/Views/Shared/core.js")" type="text/javascript"></script>
+  <script src="@Url.Content("~/Scripts/Views/Shared/mootools-more.js")" type="text/javascript"></script>
+  <script src="@Url.Content("~/Scripts/Views/Shared/moo_maximenu_CK.js")" type="text/javascript"></script>
+  <script src="@Url.Content("~/Scripts/Views/Shared/maximenu_addon_CK.js")" type="text/javascript"></script>
+  <script type="text/javascript">
+      function keepAlive() { var myAjax = new Request({ method: "get", url: "index.php" }).send(); } window.addEvent("domready", function () { keepAlive.periodical(840000); });
+  </script>
+
+<link rel="stylesheet" href="@Url.Content("~/Content/system.css")" type="text/css">
+<link rel="stylesheet" href="@Url.Content("~/Content/position.css")" type="text/css" media="screen,projection">
+<link rel="stylesheet" href="@Url.Content("~/Content/layout.css")" type="text/css" media="screen,projection">
+<link rel="stylesheet" href="@Url.Content("~/Content/print.css")" type="text/css" media="Print">
+<link rel="stylesheet" href="@Url.Content("~/Content/personal.css")" type="text/css">
+
+<link href="@Url.Content("~/Content/css.css")" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Shared/html5.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Shared/jquery-1.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Shared/cufon-yui.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Shared/cufon-replace.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Shared/Cicle_400.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/Views/Shared/jquery.js")"></script>
+<script type="text/javascript">
+    var $j = jQuery.noConflict();
+
+    $j(window).load(function () {
+        $login = $j(".menu-login li a[title='login']");
+        $login.toggle(function () { $j(".moduletable-log").slideDown("normal"); },
+				  function () {
+				      $j(".moduletable-log").slideUp("normal");
+				  });
+    });
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body class="all">
+    <div id="all">
+        <div class="main">
+            @Html.Partial("_Header")
+            @RenderBody()
+        </div>
+        <div class="footer">
+           @Html.Partial("_Footer")
+        </div>
+    </div>
+<script type="text/javascript">        Cufon.now(); </script>
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7078796-5']);
+    _gaq.push(['_trackPageview']);
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+</body>
+
+</html>

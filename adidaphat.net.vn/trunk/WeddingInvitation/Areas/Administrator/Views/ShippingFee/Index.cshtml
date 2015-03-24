@@ -1,0 +1,60 @@
+﻿@model int?
+@{
+    ViewBag.Title = "Cước vận chuyển";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#ShippingFee"));
+        if ("@Model" == "1") {
+            $(".rightcol").show();
+        }
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Cước vận chuyển
+    </div>
+    <div class="options">
+        <a onclick="openCreateForm()" class="t-button">Tạo mới</a>
+    </div>
+</div>
+
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            @Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+            @Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "ShippingFee", new { area = "administrator" })).ToHtmlString())
+            @(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.ShippingFeeModel>(), name: "ShippingFee", controllerName: "ShippingFee")
+                      .Columns(columns =>
+                      {
+                          columns.Bound(x => x.ShippingFeeId).Title("ID").ClientTemplate("<a href=\"ShippingFee/Edit/<#= ShippingFeeId #>\"><#= 10000 + ShippingFeeId #></a>")
+                              .Width(70)
+                              .Filterable(false);
+                          columns.Bound(x => x.ShippingFeeName).Title("Tên")
+                              .Filterable(false);
+                          columns.Bound(x => x.CostDisplay).Title("Cước phí")
+                              .Width(100)
+                              .Filterable(false);
+                          columns.Bound(x => x.Note).Title("Ghi chú")
+                              .Width(250)
+                              .Filterable(false);
+                          columns.Bound(p => p.ShippingFeeId)
+                              .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= ShippingFeeId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                              .HtmlAttributes(new { style = "text-align:center" })
+                              .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                              .Width(70).Sortable(false)
+                              .Filterable(false);
+                      }).Sortable(p => p.OrderBy(o => o.Add(b => b.ShippingFeeId).Descending())))
+        </td>
+        <td class="rightcol" style="display: none">
+            @Html.Action("Create", "ShippingFee")
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function openCreateForm() {
+        $(".rightcol").show();
+    }
+
+</script>

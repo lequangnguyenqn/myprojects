@@ -1,0 +1,13 @@
+﻿@model WeddingInvitation.Core.Models.ContentManagement.StaticPage
+@{
+    ViewBag.Title = "Giới Thiệu";
+}
+
+<div class="item-page">
+    <span style="color:#8b8b8b;font-size:24px;border-bottom:1px solid #CCC;line-height:32px;">Giới Thiệu</span>
+    <br />
+    <br>
+    <div class="wrapper faq">
+        @Html.Raw(Model.Content)
+    </div>
+</div>

@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{08040541-74A2-4B8A-B045-21E7E15AA54A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WeddingInvitation.Services</RootNamespace>
+    <AssemblyName>WeddingInvitation.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\packages\DotNetZipLib-DevKit-v1.9\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\iTextSharp.5.2.0\lib\itextsharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Catalog\CategoryRepository.cs" />
+    <Compile Include="Catalog\ICategoryRepository.cs" />
+    <Compile Include="Catalog\IProductRepository.cs" />
+    <Compile Include="Catalog\ProductRepository.cs" />
+    <Compile Include="ContentManagement\INewsCategoryItemRepository.cs" />
+    <Compile Include="ContentManagement\INewsItemRepository.cs" />
+    <Compile Include="ContentManagement\IStaticPageRepository.cs" />
+    <Compile Include="ContentManagement\NewsCategoryItemRepository.cs" />
+    <Compile Include="ContentManagement\NewsItemRepository.cs" />
+    <Compile Include="ContentManagement\StaticPageRepository.cs" />
+    <Compile Include="Customers\CustomerLogoRepository.cs" />
+    <Compile Include="Customers\CustomerRepository.cs" />
+    <Compile Include="Customers\ICustomerLogoRepository.cs" />
+    <Compile Include="Customers\ICustomerRepository.cs" />
+    <Compile Include="Infrastructure\ExportService.cs" />
+    <Compile Include="Infrastructure\Extensions.cs" />
+    <Compile Include="Infrastructure\ICacheManager.cs" />
+    <Compile Include="Infrastructure\IExportService.cs" />
+    <Compile Include="Infrastructure\IRepository.cs" />
+    <Compile Include="Infrastructure\IUnitOfWork.cs" />
+    <Compile Include="Infrastructure\MemoryCacheManager.cs" />
+    <Compile Include="Infrastructure\NumberToWords.cs" />
+    <Compile Include="Infrastructure\ReportFilter.cs" />
+    <Compile Include="Infrastructure\TwoColumnHeaderFooter.cs" />
+    <Compile Include="Orders\DebtRepository.cs" />
+    <Compile Include="Orders\IDebtRepository.cs" />
+    <Compile Include="Orders\IOrderDeliveryPackageRepository.cs" />
+    <Compile Include="Orders\IOrderDetailRepository.cs" />
+    <Compile Include="Orders\IOrderRepository.cs" />
+    <Compile Include="Orders\IPaymentPeriodRepository.cs" />
+    <Compile Include="Orders\OrderDeliveryPackageReportModel.cs" />
+    <Compile Include="Orders\OrderDeliveryPackageRepository.cs" />
+    <Compile Include="Orders\OrderDetailRepository.cs" />
+    <Compile Include="Orders\OrderRepository.cs" />
+    <Compile Include="Orders\PaymentPeriodRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Infrastructure\RepositoryBase.cs" />
+    <Compile Include="Settings\ExtraFeeRepository.cs" />
+    <Compile Include="Settings\IExtraFeeRepository.cs" />
+    <Compile Include="Settings\IMyOfficeRepository.cs" />
+    <Compile Include="Settings\IRateMappingRepository.cs" />
+    <Compile Include="Settings\IShippingFeeRepository.cs" />
+    <Compile Include="Settings\IShippingServiceRepository.cs" />
+    <Compile Include="Settings\IStateProvinceRepository.cs" />
+    <Compile Include="Settings\MyOfficeRepository.cs" />
+    <Compile Include="Settings\RateMappingRepository.cs" />
+    <Compile Include="Settings\ShippingFeeRepository.cs" />
+    <Compile Include="Settings\ShippingServiceRepository.cs" />
+    <Compile Include="Settings\StateProvinceRepository.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="Storages\ExpenseRepository.cs" />
+    <Compile Include="Storages\ExportDetailRepository.cs" />
+    <Compile Include="Storages\ExportTrackRepository.cs" />
+    <Compile Include="Storages\IExpenseRepository.cs" />
+    <Compile Include="Storages\IExportDetailRepository.cs" />
+    <Compile Include="Storages\IExportTrackRepository.cs" />
+    <Compile Include="Storages\IImportDetailRepository.cs" />
+    <Compile Include="Storages\IImportTrackRepository.cs" />
+    <Compile Include="Storages\ImportDetailRepository.cs" />
+    <Compile Include="Storages\ImportTrackRepository.cs" />
+    <Compile Include="Storages\IProductInStorageRepository.cs" />
+    <Compile Include="Storages\IStorageRepository.cs" />
+    <Compile Include="Storages\ITransferItemRepository.cs" />
+    <Compile Include="Storages\ITransferRepository.cs" />
+    <Compile Include="Storages\ProductInStorageRepository.cs" />
+    <Compile Include="Storages\StorageRepository.cs" />
+    <Compile Include="Storages\TransferItemRepository.cs" />
+    <Compile Include="Storages\TransferRepository.cs" />
+    <Compile Include="Users\IRoleRepository.cs" />
+    <Compile Include="Users\IUserRepository.cs" />
+    <Compile Include="Users\RoleRepository.cs" />
+    <Compile Include="Users\UserRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeddingInvitation.Core\WeddingInvitation.Core.csproj">
+      <Project>{782124D9-3DAC-403D-89E0-40B148952870}</Project>
+      <Name>WeddingInvitation.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

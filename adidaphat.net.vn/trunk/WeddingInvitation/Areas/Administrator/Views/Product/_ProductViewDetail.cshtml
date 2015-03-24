@@ -1,0 +1,110 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ProductModel
+@using (Html.BeginForm("Save", "Product", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.CategoryId > 0 ? "Sửa sản phẩm" : "Tạo mới sản phẩm")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.ProductId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Loại sản phẩm")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.CategoryId, "Loại SP là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Mã sản phẩm")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ProductCode)
+                @Html.ValidationMessageFor(model => model.ProductCode)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên sản phẩm")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ProductName)
+                @Html.ValidationMessageFor(model => model.ProductName)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Giá bán")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.DefaultPrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.DefaultPrice)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Giá gốc")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.DefaultOriginalPrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.DefaultOriginalPrice)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí in không hình")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.DefaultPrintingWithoutImagePrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.DefaultPrintingWithoutImagePrice)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí in không hình - giá gốc")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.DefaultOriginalPrintingWithoutImagePrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.DefaultOriginalPrintingWithoutImagePrice)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí in có hình cô dâu, chú rể")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.DefaultPrintingIncludeImagePrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.DefaultPrintingIncludeImagePrice)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí in có hình cô dâu, chú rể - giá gốc")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.DefaultOriginalPrintingIncludeImagePrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.DefaultOriginalPrintingIncludeImagePrice)
+            </td>
+        </tr>
+        <tr>
+                <td class="adminTitle">
+                    @Html.Label("Được phép in")
+                </td>
+                <td align="left">
+                    @Html.CheckBoxFor(model => model.Printable)
+                </td>
+            </tr>
+    </table>
+}

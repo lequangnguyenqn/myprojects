@@ -1,0 +1,157 @@
+﻿@using WeddingInvitation.Data
+@using WeddingInvitation.Infrastructure
+@model WeddingInvitation.Areas.Administrator.Models.CustomerModel
+@using (Html.BeginForm("Save", "Customer", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.CustomerId > 0 ? "Sửa khách hàng" : "Tạo mới khách hàng")
+        </div>
+        <div class="options">
+            <button id="btnSave" type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.CustomerId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên khách hàng")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CustomerName)
+                @Html.ValidationMessageFor(model => model.CustomerName)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số điện thoại")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.PhoneNumber)
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Email")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CustomerCode)
+                @Html.ValidationMessageFor(model => model.CustomerCode)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số nhà/Đường")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.Address)
+                @Html.ValidationMessageFor(model => model.Address)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Xã/Phường")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.Fax)
+                @Html.ValidationMessageFor(model => model.Fax)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Quận/Huyện")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CellPhoneNumber)
+                @Html.ValidationMessageFor(model => model.CellPhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+        @if (WorkContext.Roles.Contains(RoleType.Administrator))
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.Label("Chỉ quản trị xem")
+                </td>
+                <td align="left">
+                    @Html.CheckBoxFor(model => model.HideWithNormalUser)
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@if (Model.UseSpecialRateTable)
+{
+    @(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.RatesTableListModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.Description).HeaderHtmlAttributes(new { style = "text-align:center" }).Title("Trọng Lượng <br/> (Gram)")
+                            .Sortable(false)
+                            .Filterable(false);
+            columns.Bound(x => x.PriceColumnA).HeaderHtmlAttributes(new { style = "text-align:center" }).Title("Nội Tỉnh <br/> <b>(A)</b>")
+                .Width(150)
+                .Sortable(false)
+                .Filterable(false);
+            columns.Bound(x => x.PriceColumnB).HeaderHtmlAttributes(new { style = "height:130px;text-align:center" }).Title("TX.TD Một <br/> Tp.Biên Hòa <br/> Tp.Vũng Tàu <br/> <b>(B)</b>")
+                .Width(150)
+                .Sortable(false)
+                .Filterable(false);
+            columns.Bound(x => x.PriceColumnC).HeaderHtmlAttributes(new { style = "text-align:center" }).Title("< 300 km<br/> <b>(C)</b>")
+                .Width(150)
+                .Sortable(false)
+                .Filterable(false);
+            columns.Bound(x => x.PriceColumnD).HeaderHtmlAttributes(new { style = "text-align:center" }).Title("> 300 km<br/> <b>(D)</b>")
+                .Width(150)
+                .Sortable(false)
+                .Filterable(false);
+            columns.Bound(x => x.PriceColumnE).HeaderHtmlAttributes(new { style = "text-align:center" }).Title("Tp.Hà Nội Tp.Đà Nẵng<br/> <b>(E)</b>")
+                .Width(150)
+                .Sortable(false)
+                .Filterable(false);
+            columns.Bound(p => p.RatesTableId)
+                .ClientTemplate("<a href=\"" + Url.Action("EditForCustomer", "RatesTable", new { area = "Administrator", id = "" }) + "/<#= RatesTableId #>\"> <img src=\"" + Url.Content("~/Content/Images/edit_16_16.png") + "\" /></a>")
+                .HtmlAttributes(new { style = "text-align:center" })
+                .Title(string.Empty)
+                .Width(70).Sortable(false)
+                .Filterable(false);
+        }).DataBinding(dataBinding => dataBinding.Ajax().Select("GridModelInCustomerDetail", "RatesTable", new { customerId = Model.CustomerId }))
+    ) 
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#chkUseSpecialRateTable').click(function () {
+            $('#btnSave').click();
+
+        });
+    });
+</script>

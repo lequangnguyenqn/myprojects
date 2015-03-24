@@ -1,0 +1,70 @@
+﻿@model WeddingInvitation.Core.Models.ContentManagement.NewsCategoryItem
+@{
+    var ddlParentCat = "ddlParentCat";
+}
+@using (Html.BeginForm("Save", "NewsCategory", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.NewsCategoryItemId > 0 ? "Sửa danh mục" : "Tạo mới danh mục")
+        </div>
+        <div class="options">
+            @if (Model != null && Model.NewsCategoryItemId > 0)
+            {
+                <a href="@Url.Action("delete", new { id = Model.NewsCategoryItemId })" tabindex="7" class="t-button">Xóa</a>
+            }
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.NewsCategoryItemId)
+    @Html.HiddenFor(model => model.Level)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CategoryName)
+                @Html.ValidationMessageFor(model => model.CategoryName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Danh mục cha")
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ParentId, new SelectList(ViewBag.AllCategories, "NewsCategoryItemId", "CategoryName"),
+                                    "-Chọn-", new { @id = ddlParentCat })
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" class="adminTitle">
+                @Html.Label("Thứ tự hiển thị")
+            </td>
+            <td>
+                @(Html.Telerik().IntegerTextBoxFor(model => model.DisplayOrder).MinValue(0).MaxValue(99))
+                @(Html.ValidationMessageFor(model => model.DisplayOrder))
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" class="adminTitle">
+                @Html.Label("Mô tả")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.CategoryDescription, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.CategoryDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Kích hoạt")
+            </td>
+            <td>
+                @Html.CheckBoxFor(model => model.Active)
+            </td>
+        </tr>
+    </table>
+}

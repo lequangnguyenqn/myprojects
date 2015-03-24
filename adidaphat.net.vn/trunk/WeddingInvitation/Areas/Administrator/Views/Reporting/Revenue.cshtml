@@ -1,0 +1,219 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.OrderModel
+@{
+    ViewBag.Title = "Báo cáo doanh thu - lợi nhuận";
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Báo cáo doanh thu - lợi nhuận
+    </div>
+    <div class="options">
+        <a href="javascript:void(0)" onclick="Preview();" class="t-button">Xem</a>
+    </div>
+</div>
+
+<table width="99%">
+    <tr>
+        <td>
+            @Html.Label("Từ ngày")
+        </td>
+        <td>
+            @Html.Label("Đến ngày")
+        </td>
+        <td>
+            @Html.Label("Chi nhánh")
+        </td>
+        <td>
+            @Html.Label("Doanh thu", new { style="font-weight:bold"})
+        </td>
+        <td>
+            @Html.Label("Giá Vốn", new { style="font-weight:bold"})
+        </td>
+        <td>
+            @Html.Label("Chi Phí", new { style="font-weight:bold"})
+        </td>
+        <td>
+            @Html.Label("Lợi nhuận", new { style = "font-weight:bold" })
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @(Html.Telerik().DatePicker()
+                    .Name("FromDate")
+                    .HtmlAttributes(new { id = "FromDate_wrapper" })
+                    .ShowButton(true)
+                    .Value(DateTime.Now)
+            )
+        </td>
+        <td>
+            @(Html.Telerik().DatePicker()
+                  .Name("ToDate")
+                  .HtmlAttributes(new { id = "ToDate_wrapper" })
+                  .ShowButton(true)
+                  .Value(DateTime.Now)
+                  )
+        </td>
+        <td>
+            @Html.DropDownList("ListOffices", new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"))
+        </td>
+        <td>
+            <label id="lblDoanhThu" style="font-weight:bold;"></label>
+        </td>
+        <td>
+            <label id="lblGiaVon" style="font-weight:bold;"></label>
+        </td>
+        <td>
+            <label id="lblChiPhi" style="font-weight:bold;"></label>
+        </td>
+        <td>
+            <label id="lblLoiNhuan" style="font-weight:bold;"></label>
+        </td>
+    </tr>
+</table>
+<br />
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách đơn hàng
+    </div>
+</div>
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.OrderModel>()
+        .Name("OrderReporting")
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.OrderId).Title("ID").ClientTemplate("<label><#= 10000 + OrderId #></label>")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.CustomerName).Title("Khách Hàng")
+            .Filterable(false);
+        columns.Bound(x => x.MyOfficeIName).Title("Chi Nhánh")
+        .Width(250)
+        .Filterable(false);
+        columns.Bound(x => x.CreateDate).Title("Ngày Tạo").Format("{0:dd/MM/yyyy HH:mm}")
+            .Width(150)
+            .Filterable(false);
+        columns.Bound(x => x.TotalCostDisplay).Title("Tổng Tiền")
+            .Width(150)
+            .Filterable(false);
+    })
+    .DataBinding(dataBinding => dataBinding.Ajax().Select("OrderGridModel", "Reporting"))
+    .Pageable()
+    .Sortable()
+    .Scrollable()
+    .Groupable(grouping => grouping.Enabled(false))
+    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+    .EnableCustomBinding(true)
+    .Filterable()
+) 
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách chi phí
+    </div>
+</div>
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.ExpenseModel>()
+        .Name("ExpenseReporting")
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.ExpenseName).Title("Tên")
+                            .Filterable(false);
+        columns.Bound(x => x.CreateDate).Title("Ngày").Format("{0:dd/MM/yyyy}")
+            .Width(250)
+            .Filterable(false);
+        columns.Bound(x => x.CostDisplay).Title("Số Tiền")
+            .Width(250)
+            .Filterable(false);
+    })
+    .DataBinding(dataBinding => dataBinding.Ajax().Select("ExpenseGridModel", "Reporting"))
+    .Pageable()
+    .Sortable()
+    .Scrollable()
+    .Groupable(grouping => grouping.Enabled(false))
+    .ClientEvents(events => events.OnDataBinding("onExpenseDataBinding"))
+    .EnableCustomBinding(true)
+    .Filterable()
+) 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ListOffices").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#ListOffices").multiselect("uncheckAll");
+        jQuery.validator.methods["date"] = function (value, element) { return true; };
+    });
+    $(window).load(function () {
+        Preview();
+    });
+    function Preview() {
+        var fromDateTime = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', fromDateTime.value());
+        var toDateTime = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', toDateTime.value());
+        var listOffices = $("#ListOffices").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        jQuery.ajaxSettings.traditional = true;
+        $("#OrderReporting").data('tGrid')
+                         .rebind({
+                             FromDate: fromDate,
+                             ToDate: toDate,
+                             ListOffices: listOffices
+                         });
+        $("#ExpenseReporting").data('tGrid')
+                        .rebind({
+                            FromDate: fromDate,
+                            ToDate: toDate
+                        });
+
+        $.ajax({
+            url: '@Url.Action("GetRevenue", "Reporting")',
+            type: "POST",
+            dataType: "json",
+            // query will be the param used by your action method
+            data: { FromDate: fromDate, ToDate: toDate },
+            success: function (data) {
+                $("#lblDoanhThu").text(data.DoanhThu);
+                $("#lblLoiNhuan").text(data.LoiNhuan);
+                $("#lblGiaVon").text(data.GiaVon);
+                $("#lblChiPhi").text(data.ChiPhi);
+            }
+        });
+        
+    }
+    
+    function onDataBinding(e) {
+        var fromDateTime = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', fromDateTime.value());
+        var toDateTime = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', toDateTime.value());
+        var listOffices = $("#ListOffices").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var searchModel = {
+            FromDate: fromDate,
+            ToDate: toDate,
+            ListOffices: listOffices
+        };
+        e.data = searchModel;
+    }
+    function onExpenseDataBinding(e) {
+        var fromDateTime = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', fromDateTime.value());
+        var toDateTime = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', toDateTime.value());
+        var listOffices = $("#ListOffices").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var searchModel = {
+            FromDate: fromDate,
+            ToDate: toDate,
+            ListOffices: listOffices
+        };
+        e.data = searchModel;
+    }
+</script>

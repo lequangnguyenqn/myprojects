@@ -1,0 +1,153 @@
+﻿@using WeddingInvitation.Core.Models.Storages
+@model WeddingInvitation.Areas.Administrator.Models.ExpenseModel
+@using (Html.BeginForm("Save", "Expense", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.ExpenseId > 0 ? "Sửa chi phí" : "Tạo mới chi phí")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.ExpenseId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Bộ phận thụ hưởng")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DepartmentType, DepartmentTypes.GetExpenseTypes())
+                @Html.ValidationMessageFor(model => model.DepartmentType, "Bộ phận thụ hưởng là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Người thụ hưởng")
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ReceiveUserId, new SelectList(Model.Employees, "UserId", "FullName"), "-Chọn-")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Loại phí")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ExpenseType, ExpenseTypes.GetExpenseTypes())
+                @Html.ValidationMessageFor(model => model.ExpenseType, "Loại phí là bắt buộc.")
+            </td>
+        </tr>
+        <tr id="trLargePackage" @(Model.ExpenseType == (int)ExpenseTypes.EnumExpenseTypes.Shipping ? "" : "style=display:none;")>
+            <td width="100" class="adminTitle">
+                @Html.Label("Thùng lớn")
+            </td>
+            <td style="padding-bottom:10px">
+                @(Html.Telerik().IntegerTextBoxFor(model => model.LargePackage).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").ClientEvents(events => events.OnChange("GetCost")))
+                @Html.ValidationMessageFor(model => model.LargePackage)
+            </td>
+        </tr>
+        <tr id="trSmallPackage" @(Model.ExpenseType == (int)ExpenseTypes.EnumExpenseTypes.Shipping ? "" : "style=display:none;")>
+            <td width="100" class="adminTitle">
+                @Html.Label("Thùng nhỏ")
+            </td>
+            <td style="padding-bottom:10px">
+                @(Html.Telerik().IntegerTextBoxFor(model => model.SmallPackage).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").ClientEvents(events => events.OnChange("GetCost")))
+                @Html.ValidationMessageFor(model => model.SmallPackage)
+            </td>
+        </tr>
+        <tr id="trExpenseName" @(Model.ExpenseType == (int)ExpenseTypes.EnumExpenseTypes.Incurred ? "" : "style=display:none;")>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên chi phí ")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ExpenseName)
+                @Html.ValidationMessageFor(model => model.ExpenseName)
+            </td>
+        </tr>
+        <tr id="trEmployeeId" @(Model.ExpenseType == (int)ExpenseTypes.EnumExpenseTypes.Salary ? "" : "style=display:none;")>
+            <td width="100" class="adminTitle">
+                @Html.Label("Lương của nhân viên")
+                <span class="field_required"></span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SalaryOfEmployeeId, new SelectList(Model.Employees, "UserId", "FullName"), "-Chọn-")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số tiền")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Cost).Name("Cost").MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Cost)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}
+<script type="text/javascript">
+    $(window).load(
+    function () {
+        $('#ExpenseType').change(function () {
+            if ($(this).val() == "@((int)ExpenseTypes.EnumExpenseTypes.Shipping)") {
+                $('#trLargePackage').show();
+                $('#trSmallPackage').show();
+            } else {
+                $('#trLargePackage').hide();
+                $('#trSmallPackage').hide();
+            }
+            if ($(this).val() == "@((int)ExpenseTypes.EnumExpenseTypes.Incurred)") {
+                $('#trExpenseName').show();
+            } else {
+                $('#trExpenseName').hide();
+            }
+            if ($(this).val() == "@((int)ExpenseTypes.EnumExpenseTypes.Salary)") {
+                $('#trEmployeeId').show();
+            } else {
+                $('#trEmployeeId').hide();
+            }
+        });
+        $('#SalaryOfEmployeeId').change(function () {
+            GetCost();
+        });
+    });
+    function GetCost() {
+        var expenseType = $('#ExpenseType').val();
+        var largePackage = $("#LargePackage").data("tTextBox").value();
+        var smallPackage = $("#SmallPackage").data("tTextBox").value();
+        var userId = $("#SalaryOfEmployeeId").val();
+        $.ajax({
+            url: '@Url.Action("GetCost", "Expense")',
+            type: "POST",
+            dataType: "json",
+            // query will be the param used by your action method
+            data: { expenseType: expenseType, largePackage: largePackage, smallPackage: smallPackage, userId: userId },
+            success: function (data) {
+                $("#Cost").data("tTextBox").value(data);
+            }
+        });
+    }
+</script>

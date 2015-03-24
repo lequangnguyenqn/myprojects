@@ -1,0 +1,159 @@
+﻿@using System.ServiceModel.Activities.Configuration
+@using WeddingInvitation.Infrastructure
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="@Href("~/favicon.ico")" type="image/x-icon">
+    <script src="@Url.Content("~/Scripts/js/libs/jquery-1.6.2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.11.min.js")" type="text/javascript"></script>
+@{
+    @Html.Telerik().StyleSheetRegistrar().DefaultGroup(group => group
+            .Add("~/Areas/Administrator/Content/Styles.css")
+            .Add("~/Content/themes/cupertino/jquery-ui-1.8.21.custom.css")
+            .Add("telerik.common.css")
+            .Add("telerik.vista.css")
+            .Add("~/Content/jquery.multiselect.css")
+            .Add("~/Content/tooltipster.css")
+            .Add("~/Content/tooltipster-light.css")
+            .Add("~/Content/animate.css")
+            .Combined(false)
+            .Compress(false));
+
+    Html.Telerik().ScriptRegistrar().DefaultGroup(group => group
+        .Add("~/Scripts/jquery.validate.js")
+        .Add("~/Scripts/jquery.validate.unobtrusive.js")
+        .Add("~/Scripts/Views/Shared/Helpers.js")
+        .Add("~/Scripts/jquery.multiselect.min.js")
+        .Add("~/Scripts/Views/Shared/Search.js")
+        .Add("~/Scripts/jquery.lettering.js")
+        .Add("~/Scripts/jquery.textillate.js")
+        .Add("~/Scripts/jquery.tooltipster.js")
+        .Add("telerik.common.js")
+        .Add("telerik.list.js")
+        .Add("telerik.combobox.js")
+        .Add("telerik.draganddrop.js")
+        .Add("telerik.tabstrip.js")
+        .Add("telerik.window.js")
+        .Add("telerik.editor.js")
+        .Add("telerik.upload.js")
+    );  
+}
+<body>
+    <div class="master-wrapper-page">
+        <div class="master-wrapper-content">
+            <div class="header">
+                <div style="font-size:40px;padding:5px; color:#fff;">
+                   <span class="sologan">Tự Giác - Năng Động - Nhiệt Tình - Chính Xác - Trung Thực Và Đạo Đức - Hết Lòng vì Khách Hàng</span>
+                </div>
+                <div class="languageselector">
+                </div>
+                @if (WorkContext.CurrentUserId > 0)
+                {
+                    <div class="links">
+                        @Html.ActionLink("Trang chủ", "index", "home", new {area = ""}, new {@target = "_blank"})
+                    </div>
+                    <div class="login-info">
+                        Xin chào : @WorkContext.FullName
+                        | @Html.ActionLink("Thay đổi mật khẩu", "ChangePassword", "User", new {area = "Administrator", id = WorkContext.CurrentUserId}, new {})
+                        | @Html.ActionLink("Đănng xuất", "logoff", "account", new {area = ""}, new {})
+                    </div>
+                }
+                <div class="version">
+                    <span>James Ltd.co</span>
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="header-menu">
+                @Html.Partial("~/Areas/Administrator/Views/Shared/_Menu.cshtml")
+            </div>
+            <div class="status-bar">
+                <div class="help">
+                    @DateTime.Now.ToString("dd MMMM yyyy",
+                     System.Globalization.CultureInfo.CreateSpecificCulture("vi-VN"))
+                </div>
+                <div class="breadcrumb">
+                    <!-- SiteMapPath here-->
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="content">
+                <!-- dttuan Add for view Notify -->
+                @Html.Partial("~/Areas/Administrator/Views/Shared/_Notifications.cshtml")
+                <div class="cph">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--These need to be at the end of the page to ensure that all the controls requiring scripts have been rendered-->
+    @*@(MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().ScriptRegistrar()
+        .jQuery(false).ToHtmlString())))*@
+@(MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().ScriptRegistrar()
+    .Globalization(false)
+        .jQuery(false).ToHtmlString())))
+    <script>
+        $('.sologan').textillate({
+            // the default selector to use when detecting multiple texts to animate
+            selector: '.texts',
+
+            // enable looping
+            loop: true,
+
+            // sets the minimum display time for each text before it is replaced
+            minDisplayTime: 7000,
+
+            // sets the initial delay before starting the animation
+            // (note that depending on the in effect you may need to manually apply 
+            // visibility: hidden to the element before running this plugin)
+            initialDelay: 2000,
+
+            // set whether or not to automatically start animating
+            autoStart: true,
+
+            // in animation settings
+            in: {
+                // set the effect name
+                effect: 'fadeInUp',
+                type: 'sequence',
+
+                // set the delay factor applied to each consecutive character
+                delayScale: 1.5,
+
+                // set the delay between each character
+                delay: 50,
+
+                // set to true to animate all the characters at the same time
+                sync: false,
+
+                // randomize the character sequence 
+                // (note that shuffle doesn't make sense with sync = true)
+                shuffle: false,
+
+                // reverse the character sequence 
+                // (note that reverse doesn't make sense with sync = true)
+                reverse: false,
+
+                // callback that executes once the animation has finished
+                callback: function () { }
+            },
+
+            // out animation settings.
+            out: {
+                effect: 'fadeOutLeftBig',
+                type: 'sequence',
+                delayScale: 1.5,
+                delay: 50,
+                sync: false,
+                shuffle: false,
+                reverse: false,
+                callback: function () { }
+            },
+
+            // callback that executes once textillate has finished 
+            callback: function () { }
+        });
+</script>
+</html>

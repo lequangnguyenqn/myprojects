@@ -1,0 +1,17 @@
+﻿@model WeddingInvitation.Infrastructure.Services.PaypalErrorModel
+@{
+    ViewBag.Title = "Paypal";
+}
+<div style="padding-left:20px">
+    <br/>
+    <span style="color:red">Error in Paypal processing...</span>
+    <br/>
+    <br/>
+    Error code: @Html.Raw(Model.ErrorCode)
+    <br/>
+    @Html.Raw(Model.Desc)
+    <br/>
+    @Html.Raw(Model.Desc2)
+    <br>
+    <br>
+</div>

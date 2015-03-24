@@ -1,0 +1,55 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ExtraFeeModel
+@using (Html.BeginForm("Save", "ExtraFee", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.ExtraFeeId > 0 ? "Sửa phí phụ thêm" : "Tạo mới phí phụ thêm")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.ExtraFeeId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên chi phí ")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ExtraFeeName)
+                @Html.ValidationMessageFor(model => model.ExtraFeeName)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số lượng từ")
+            </td>
+            <td style="padding-bottom:10px">
+                @(Html.Telerik().IntegerTextBoxFor(model => model.AmountFrom).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator("."))
+                @Html.ValidationMessageFor(model => model.AmountFrom)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số lượng đến")
+            </td>
+            <td style="padding-bottom:10px">
+                @(Html.Telerik().IntegerTextBoxFor(model => model.AmountTo).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator("."))
+                @Html.ValidationMessageFor(model => model.AmountTo)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí thêm")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Cost).Name("Cost").MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Cost)
+            </td>
+        </tr>
+    </table>
+}

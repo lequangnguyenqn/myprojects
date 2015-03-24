@@ -1,0 +1,56 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ShippingFeeModel
+@using (Html.BeginForm("Save", "ShippingFee", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.ShippingFeeId > 0 ? "Sửa" : "Tạo mới")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.ShippingFeeId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ShippingFeeName)
+                @Html.ValidationMessageFor(model => model.ShippingFeeName, "Tên là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Cước phí")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Cost).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Cost)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}

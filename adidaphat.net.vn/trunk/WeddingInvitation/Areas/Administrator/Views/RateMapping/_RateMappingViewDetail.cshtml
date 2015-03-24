@@ -1,0 +1,114 @@
+﻿@using iTextSharp.text.pdf.qrcode
+@model WeddingInvitation.Areas.Administrator.Models.RateMappingModel
+@using (Html.BeginForm("Save", "RateMapping", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.RateMappingId > 0 ? "Sửa định giá" : "Tạo mới định giá")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.RateMappingId)
+    @Html.HiddenFor(model => model.ProductSelected)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-", new {style="width:326px;"})
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+            </td>
+        </tr>
+        @if (Model.RateMappingId > 0)
+        {
+            <tr>
+                <td width="100" class="adminTitle">
+                    @Html.Label("Sản phẩm")
+                    <span class="field_required">*</span>
+                </td>
+                <td class="adminData">
+                    @Html.DropDownListFor(model => model.ProductId, new SelectList(Model.Products, "ProductId", "ProductName"), "-Chọn-")
+                    @Html.ValidationMessageFor(model => model.ProductId, "Sản phẩm là bắt buộc.")
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td width="100" class="adminTitle">
+                    @Html.Label("Sản phẩm")
+                    <span class="field_required">*</span>
+                </td>
+                <td class="adminData">
+                    @Html.DropDownList("ListProducts", new SelectList(Model.Products, "ProductId", "ProductName"))
+                </td>
+            </tr>
+        }
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Giá")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Price).Name("Price").MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Price)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí in không hình")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.PrintingWithoutImagePrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.PrintingWithoutImagePrice)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí in có hình cô dâu, chú rể")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.PrintingIncludeImagePrice).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.PrintingIncludeImagePrice)
+            </td>
+        </tr>
+    </table>
+}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#ListProducts").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#ListProducts").css('width', 311);
+        $("#ListProducts").multiselect("uncheckAll");
+    });
+    $("#ListProducts").bind("multiselectclick", function (event, ui) {
+        var listProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        $("#ProductSelected").val(listProducts);
+    });
+    $("#ListProducts").bind("multiselectcheckall", function (event, ui) {
+        var listProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        $("#ProductSelected").val(listProducts);
+    });
+    $("#ListProducts").bind("multiselectuncheckall", function (event, ui) {
+        var listProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        $("#ProductSelected").val(listProducts);
+    });
+</script>

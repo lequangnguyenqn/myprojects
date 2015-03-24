@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap>
+  <siteMapNode title="Home" resourceKey="txtHome">
+    <siteMapNode title="Thông Báo"  resourceKey="txtDashboard" controller="Home" action="index" ImageUrl="~/Areas/Administrator/Content/images/ico-dashboard.png" />
+    <!--<siteMapNode title="Đơn Hàng Và Xác Nhận" PermissionNames="NV Giao Hang, Ke Toan, Nhan Vien In, Nhap Lieu, Admin" resourceKey="txtParcelsTracking" ImageUrl="~/Areas/Administrator/Content/images/ico-sales.png" >
+      <siteMapNode title="Nhập Đơn Hàng" PermissionNames="Nhap Lieu, Admin" resourceKey="txtParcel" controller="Order" action="Create" />
+      <siteMapNode title="Đơn Hàng Chưa Có File Hoặc Chờ Duyệt In" PermissionNames="Nhap Lieu, Admin" resourceKey="txtTracking" controller="Order" action="UploadFile" />
+      <siteMapNode title="Khách Hàng Chưa Thanh Toán" PermissionNames="Ke Toan, Admin" resourceKey="txtTracking" controller="Order" action="PriceApproval" />\
+      <siteMapNode title="Đơn Hàng Chờ In" PermissionNames="Nhan Vien In, Admin" resourceKey="txtTracking" controller="Order" action="Printing" />
+      <siteMapNode title="Giao Hàng" PermissionNames="NV Giao Hang, Admin" resourceKey="txtTracking" controller="Order" action="Delivery" />
+      --><!--<siteMapNode title="Chưa Thanh Toán" PermissionNames="NV Giao Hang, Admin" resourceKey="txtTracking" controller="Order" action="NotPaid" />--><!--
+      <siteMapNode title="Quản Lý Đơn Hàng" PermissionNames="Nhap Lieu, Admin" resourceKey="txtParcelReporting" controller="Order" action="index" />
+    </siteMapNode>
+    <siteMapNode title="Kho Và Thống kê" PermissionNames="Admin, Ke Toan" resourceKey="txtParcelsTracking" ImageUrl="~/Areas/Administrator/Content/images/ico-sales.png" >
+      <siteMapNode title="Nhập Kho" PermissionNames="Admin, Ke Toan" resourceKey="txtExport" controller="ImportTrack" action="Index" />
+      <siteMapNode title="Xuất Kho" PermissionNames="Admin, Ke Toan" resourceKey="txtExport" controller="ExportTrack" action="Index" />
+      <siteMapNode title="Chi Phí" PermissionNames="Admin, Ke Toan" resourceKey="txtExpense" controller="Expense" action="Index" />
+      <siteMapNode title="Sản Phẩm Trong Kho" PermissionNames="Admin, Ke Toan" resourceKey="txtExport" controller="ProductInStorage" action="Index" />
+      <siteMapNode title="B.Kê Tổng Hợp" PermissionNames="Admin, Ke Toan" resourceKey="txtReporting" controller="Reporting" action="Index" />
+      <siteMapNode title="Doanh Thu" PermissionNames="Admin" resourceKey="txtOffice"  controller="Reporting" action="Revenue">
+      </siteMapNode>
+    </siteMapNode>
+    <siteMapNode title="Khách Hàng" PermissionNames="Admin, Ke Toan" resourceKey="txtSales" ImageUrl="~/Areas/Administrator/Content/images/User group.png" >
+      <siteMapNode title="Quản Lý Khách Hàng" resourceKey="txtCustomer" controller="Customer" action="index"/>
+    </siteMapNode>
+    <siteMapNode title="Nhân Viên" PermissionNames="Admin" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/ico-customers.png" >
+      <siteMapNode title="Quản Lý Nhân Viên" PermissionNames="Admin" resourceKey="txtEmployee" controller="User" action="Index"/>
+    </siteMapNode>-->
+    <siteMapNode title="Kế toán" PermissionNames="Admin, Ke Toan" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/emblem_money.png" >
+      <siteMapNode title="Nhập kho" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="ImportTrack" action="Create"/>
+      <siteMapNode title="Báo cáo nhập kho" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="ImportTrack" action="Index"/>
+      <siteMapNode title="Chuyển kho nội bộ" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="Transfer" action="Create"/>
+      <siteMapNode title="Báo cáo chuyển kho nội bộ" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="Transfer" action="Index"/>
+      <!--<siteMapNode title="Quản lý công nợ phải thu của khách" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="User" action="Index"/>-->
+      <siteMapNode title="Quản lý công nợ phải trả cho trung thành" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="OrderDeliveryPackage" action="Index"/>
+      <siteMapNode title="Quản lý chi tiền" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="Expense" action="Create"/>
+      <siteMapNode title="Báo cáo chi phí" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="Expense" action="Index"/>
+      <!--<siteMapNode title="Báo cáo danh sách khách hàng đang nợ" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="User" action="Index"/>-->
+      <siteMapNode title="Tạo công nợ cuối kỳ theo chi nhánh" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="Debt" action="Create"/>
+      <siteMapNode title="Danh sách công nợ cuối kỳ đã hoàn tất" PermissionNames="Admin, Ke Toan" resourceKey="txtEmployee" controller="Debt" action="Index"/>
+    </siteMapNode>
+    <siteMapNode title="Quản lý chung " PermissionNames="Admin, Quan Ly Chung" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/personal.png" >
+      <siteMapNode title="Xác nhận nhập kho" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="ImportTrack" action="ManagerApprove"/>
+      <siteMapNode title="Xác nhận chuyển kho nội bộ" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="ManagerApprove"/>
+      <siteMapNode title="Báo cáo tồn kho " PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="ProductInStorage" action="Index"/>
+      <siteMapNode title="Xác nhận thu tiền mặt của khách" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="PaymentPeriod" action="ManagerApprove"/>
+      <siteMapNode title="Báo cáo công nợ đã thu tiền mặt của khách" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="PaymentPeriod" action="CustomerPaidForManager"/>
+      <siteMapNode title="Xác nhận chi tiền" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Expense" action="ManagerApprove"/>
+      <siteMapNode title="Báo cáo xác nhận chi phí" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Expense" action="Manager"/>
+      <siteMapNode title="Xác nhận báo cáo công nợ cuối kỳ theo chi nhánh" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Debt" action="ManagerApprove"/>
+      <siteMapNode title="Danh sách công nợ cuối kỳ đã hoàn tất" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Debt" action="Index"/>
+      <siteMapNode title="Xác nhận đơn hàng hủy" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="OrderCancelForManager"/>
+      <siteMapNode title="Báo cáo danh sách đơn hàng hủy" PermissionNames="Admin, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportApproveOrderCancelForManager"/>
+    </siteMapNode>
+    <siteMapNode title="Bộ phận kho" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/database.png" >
+      <siteMapNode title="Xác nhận nhập kho" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="ImportTrack" action="StorageStaffApprove"/>
+      <siteMapNode title="Báo cáo nhập kho" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="ImportTrack" action="Index"/>
+      <siteMapNode title="Xác nhận chuyển kho nội bộ" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="StorageStaffApproveExport"/>
+      <siteMapNode title="Báo cáo chuyển kho nội bộ" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="Index"/>
+      <siteMapNode title="Xác nhận nhập hàng từ kho khác" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="StorageStaffApproveReceive"/>
+      <siteMapNode title="Báo cáo nhập hàng từ kho khác" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="ImportFromOtherStorage"/>
+      <siteMapNode title="Xác nhận xuất hàng thông thường từ kinh doanh" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="StorageStaffApprove"/>
+      <siteMapNode title="Báo cáo xuất hàng thông thường" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="ExportTrack" action="Index"/>
+      <siteMapNode title="Danh sách đơn hàng phải lấy lại" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="OrderCancelForStorage"/>
+      <siteMapNode title="Báo cáo danh sách đơn hàng hủy" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportApproveOrderCancelForStorage"/>
+      <siteMapNode title="Báo cáo tồn kho" PermissionNames="Admin, Bo Phan Kho, Quan Ly Chung" resourceKey="txtEmployee" controller="ProductInStorage" action="Index"/>
+    </siteMapNode>
+    <!--<siteMapNode title="Giao hàng " PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/package.png" >
+      <siteMapNode title="Tiếp nhận chuyển kho nội bộ" PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="ApproveFromGeneralDeliveryMan"/>
+      --><!--<siteMapNode title="Xác nhận đơn hàng hủy" PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="OrderCancelForDelivery"/>
+      <siteMapNode title="Báo cáo danh sách đơn hàng hủy" PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportApproveOrderCancelForDelivery"/>--><!--
+      <siteMapNode title="Báo cáo tiếp nhận chuyển kho nội bộ" PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtEmployee" controller="Transfer" action="Index"/>
+      <siteMapNode title="Đơn hàng chuyển trong ngày" PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ApproveDeliveryInDay"/>
+      <siteMapNode title="Báo cáo đơn hàng chuyển trong ngày" PermissionNames="Admin, Bo Phan Giao Hang, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportApproveDeliveryInDay"/>
+    </siteMapNode>-->
+    <siteMapNode title="Giao hàng tỉnh" PermissionNames="Admin, NV Giao Hang Tinh, Quan Ly Chung" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/truck.png" >
+      <siteMapNode title="Danh sách hàng chưa gởi và chưa thu tiền " PermissionNames="Admin, NV Giao Hang Tinh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="DeliveryStaffApprove"/>
+      <siteMapNode title="Báo cáo xác nhận đã gởi hàng và thu hộ" PermissionNames="Admin, NV Giao Hang Tinh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportDeliveryStaffApprove"/>
+      <siteMapNode title="Quản lý công nợ phải trả cho trung thành" PermissionNames="Admin, NV Giao Hang Tinh, Quan Ly Chung" resourceKey="txtEmployee" controller="OrderDeliveryPackage" action="Index"/>
+      <!--<siteMapNode title="Báo cáo danh sách hàng chưa gởi và chưa thu tiền" PermissionNames="Admin, NV Giao Hang Tinh" resourceKey="txtEmployee" controller="Order" action="ReportNotDeliveryYet"/>-->
+    </siteMapNode>
+    <siteMapNode title="Kinh doanh" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/phone.png" >
+      <!--<siteMapNode title="Nhập đơn hàng" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="Create"/>-->
+      <siteMapNode title="Cập nhật File Hoặc Duyệt In" PermissionNames="Kinh Doanh, Admin, Quan Ly Chung" resourceKey="txtTracking" controller="Order" action="UploadFile" />
+      <siteMapNode title="Báo cáo danh sách đơn hàng" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="Index"/>
+      <!--<siteMapNode title="Xác nhận đơn hàng hủy" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="OrderCancelForSale"/>-->
+      <siteMapNode title="Báo cáo danh sách đơn hàng hủy" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportApproveOrderCancelForSale"/>
+      <siteMapNode title="Quản lý thu tiền mặt của khách" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="PaymentPeriod" action="Index"/>
+      <siteMapNode title="Báo cáo công nợ đã thu tiền mặt của khách " PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="PaymentPeriod" action="CustomerPaid"/>
+      <siteMapNode title="Tạo đơn hàng giao trong ngày" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="Delivery"/>
+      <siteMapNode title="Báo cáo đơn hàng giao trong ngày" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="DeliveryPackage"/>
+      <siteMapNode title="Danh sách giao hàng hoàn tất" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportDeliveryStaffApprove"/>
+      <siteMapNode title="Báo cáo số lượng sản phẩm bán ra" PermissionNames="Admin, Kinh Doanh, Quan Ly Chung" resourceKey="txtEmployee" controller="Reporting" action="Sale"/>
+    </siteMapNode>
+    <!--<siteMapNode title="Quản lý in" PermissionNames="Admin, Quan Ly In, Quan Ly Chung" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/printers_faxes.png" >
+      <siteMapNode title="Đơn hàng chờ in" PermissionNames="Admin, Quan Ly In, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="Printing"/>
+      <siteMapNode title="Xác nhận đơn hàng hủy" PermissionNames="Admin, Quan Ly In, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="OrderCancelForPrint"/>
+      <siteMapNode title="Báo cáo danh sách đơn hàng hủy" PermissionNames="Admin, Quan Ly In, Quan Ly Chung" resourceKey="txtEmployee" controller="Order" action="ReportApproveOrderCancelForPrint"/>
+    </siteMapNode>-->
+    <siteMapNode title="Quản trị" PermissionNames="Admin" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/1day.png" >
+      <siteMapNode title="Báo cáo số lượng sản phẩm bán ra" PermissionNames="Admin" resourceKey="txtEmployee" controller="Reporting" action="Sale"/>
+      <siteMapNode title="Báo cáo doanh thu - lợi nhuận" PermissionNames="Admin" resourceKey="txtEmployee" controller="Reporting" action="Revenue"/>
+    </siteMapNode>
+    <siteMapNode title="Thiết Lập" PermissionNames="Admin, Ke Toan, Quan Ly Chung" resourceKey="txtSettings" ImageUrl="~/Areas/Administrator/Content/images/ico-configuration.png" >
+      <siteMapNode title="Sản Phẩm" PermissionNames="Admin" resourceKey="txtRegion"  controller="Product" action="index">
+      </siteMapNode>
+      <siteMapNode title="Giá Theo Chi Nhánh" PermissionNames="Admin" resourceKey="txtOffice"  controller="RateMapping" action="index">
+      </siteMapNode>
+      <siteMapNode title="Bộ Sản Phẩm" PermissionNames="Admin" resourceKey="txtRatesTable"  controller="Category" action="index">
+      </siteMapNode>
+      <siteMapNode title="Chi Nhánh" PermissionNames="Admin" resourceKey="txtOffice"  controller="MyOffice" action="index">
+      </siteMapNode>
+     <siteMapNode title="Chành xe" PermissionNames="Admin, Ke Toan, Quan Ly Chung" resourceKey="txtOffice"  controller="ShippingService" action="index">
+      </siteMapNode>
+      <siteMapNode title="Phí Phụ Thêm" PermissionNames="Admin" resourceKey="txtOffice"  controller="ExtraFee" action="index">
+      </siteMapNode>
+      <siteMapNode title="Cước Chuyển Phát" PermissionNames="Admin" resourceKey="txtOffice"  controller="ShippingFee" action="index">
+      </siteMapNode>
+      <siteMapNode title="Kho" PermissionNames="Admin, Ke Toan, Quan Ly Chung" resourceKey="txtExport" controller="Storage" action="Index" />
+      <siteMapNode title="Nhân Viên" PermissionNames="Admin" resourceKey="txtEmployee" controller="User" action="Index"/>
+      <siteMapNode title="Khách Hàng" resourceKey="txtCustomer" controller="Customer" action="index"/>
+    </siteMapNode>
+  </siteMapNode>
+</siteMap>
+

@@ -1,0 +1,486 @@
+﻿@using WeddingInvitation.Areas.Administrator.Models
+@using WeddingInvitation.Data
+@using WeddingInvitation.Infrastructure.Security;
+@using WeddingInvitation.Infrastructure;
+@model WeddingInvitation.Areas.Administrator.Models.OrderModel
+@{
+    var photoNotExistFileName = @Url.Content("~/Content/images/document.png");
+    var photoExistedFileName = @Url.Content("~/Content/images/unavailable.png");
+}
+@if ((Model.OrderId > 0 && (WorkContext.Roles.Contains(RoleType.Administrator) || WorkContext.Roles.Contains(RoleType.KeToan) || WorkContext.Roles.Contains(RoleType.KinhDoanh))) || Model.OrderId <= 0)
+{
+using (Html.BeginForm("Save", "Order", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.OrderId > 0 ? "Sửa đơn hàng" : "Tạo mới đơn hàng")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            @if (Model.BackId == (int) BackToPage.UploadFile)
+            {
+                <a href="@Url.Action("UploadFile", "Order", new { area = "Administrator" })" tabindex="8" class="t-button">Quay về</a>
+            }
+            else if (Model.BackId == (int) BackToPage.Printing)
+            {
+                <a href="@Url.Action("Printing", "Order", new { area = "Administrator" })" tabindex="8" class="t-button">Quay về</a>
+            }
+            else
+            {
+                <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+            }
+            
+        </div>
+    </div>
+    <input type="hidden" id="hfMyOfficeId" value="@Model.MyOfficeId"/>
+    <input type="hidden" id="hfShippingServiceId" value="@Model.ShippingServiceId" />
+    @Html.HiddenFor(model => model.OrderId)
+    @Html.HiddenFor(model => model.TotalCost)
+    @Html.HiddenFor(model => model.ExtraFee)
+    @Html.HiddenFor(model => model.BackId)
+    <table width="99%">
+        @if (WorkContext.Roles.Contains(RoleType.Administrator) && Model.OrderId> 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.Label("Ngày tạo")
+                </td>
+                <td align="left">
+                    @Html.Telerik().DatePickerFor(model => model.CreateDate)
+                </td>
+            </tr>
+        }
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownListFor(model => model.MyOfficeId)
+                    .Name("MyOfficeId").HtmlAttributes(new {style = "clear:both; width: 312px; float: left;" })
+                    .BindTo(new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"))
+                    .Placeholder("-Chọn-")
+                    .CascadeTo("CustomerId")
+                    .ClientEvents(events => events
+                                .OnChange("onComboBoxChange")))
+                @*@Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")*@
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+                <label id="lblTotalCost" style="text-align: right; float: right; font-size: 17px; padding-right: 80px; color: rgb(0, 93, 182); font-weight:bold;">Tổng cộng: 0</label>
+            </td>
+        </tr>
+        <tr id="trTextCustomer" style="display:none;">
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên khách hàng")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CustomerName)
+                @Html.ValidationMessageFor(model => model.CustomerName)
+                <label id="lblExtraFee2" style="text-align: right; float: right; font-size: 17px; padding-right: 80px; color: rgb(0, 159, 255);">Phụ thu: 0</label>
+            </td>
+        </tr>
+        <tr id="trDropdownCustomer">
+            <td width="100" class="adminTitle">
+                @Html.Label("Khách hàng")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownListFor(model => model.CustomerId)
+                    .Name("CustomerId")
+                    .HtmlAttributes(new {style = "clear:both; width: 312px; float: left;" })
+                    .DataBinding(binding => binding.Ajax().Select("GetCustomers", "Order"))
+                    .Placeholder("-Chọn-")
+                    .ClientEvents(events => events
+                                .OnChange("onComboBoxCustomerChange")))
+                @Html.ValidationMessageFor(model => model.CustomerId, "Khách hàng là bắt buộc.")
+                <label id="lblCustomerNote" style="text-align: right; padding-right: 80px; color: red;"></label>
+                <label id="lblExtraFee" style="text-align: right; float: right; font-size: 17px; padding-right: 80px; color: rgb(0, 159, 255);display:none;">Phụ thu: 0</label>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Phương thức thanh toán")
+            </td>
+            <td class="left">
+                <div>
+                    <input type="radio" name="PaymentType" value="@((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InShippingPlace)" @((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InShippingPlace==Model.PaymentType ? "checked=checked" : string.Empty)>
+                    <span>Giao hàng nhận tiền</span>
+                </div>
+                <div>
+                    <input type="radio" name="PaymentType" value="@((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.Tranfer)" @((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.Tranfer==Model.PaymentType ? "checked=checked" : string.Empty)>
+                    <span>Chuyển khoản</span>
+                </div>
+                <div>
+                    <input type="radio" name="PaymentType" value="@((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InOffice)" @((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InOffice==Model.PaymentType ? "checked=checked" : string.Empty)>
+                    <span>Tới lấy</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chành xe")
+            </td>
+            @if(string.IsNullOrEmpty(Model.ShippingServiceName))
+            {
+            <td class="adminData">
+                @(Html.Telerik().DropDownListFor(model => model.ShippingServiceId)
+                      .Name("ShippingServiceId")
+                      .HtmlAttributes(new {style = "clear:both; width: 312px; float: left;" })
+                      .Enable(false)
+                      .Placeholder("-Chọn-")
+                      .ClientEvents(events => events
+                                .OnChange("onComboBoxShippingServiceChange")))
+                @Html.ValidationMessageFor(model => model.ShippingServiceId, "Chành xe là bắt buộc.")
+            </td>
+            }
+            else
+            {
+                <td class="adminData">
+                @Html.TextBoxFor(model => model.ShippingServiceName)
+                @Html.ValidationMessageFor(model => model.ShippingServiceName)
+                    </td>
+            }
+        </tr>
+       @* <tr>
+            <td class="adminTitle">
+                @Html.Label("Đơn hàng ưu tiên")
+            </td>
+            <td align="left">
+                @Html.CheckBoxFor(model => model.ShowOnTop)
+                <span class="field_required">(Vui lòng hỏi quản lý để thực hiện thao tác này)</span>
+            </td>
+        </tr>*@
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Chờ duyệt in")
+            </td>
+            <td align="left">
+                @Html.CheckBoxFor(model => model.WaitForPrint)
+            </td>
+        </tr>     
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách sản phẩm
+    </div>
+    @if(Model.OrderId <= 0)
+    {
+    <div class="options">
+        <a href="@Url.Action("CreateOrderDetail", "Order", new { orderId = Model.OrderId})" class="t-button">Thêm</a>
+    </div>
+    }
+</div>
+}
+else
+{
+    <div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách sản phẩm
+    </div>
+    <div class="options">
+        <a href="@Url.Action("PrintDone", "Order", new { id = Model.OrderId})" class="t-button">In hoàn tất</a>
+        <a href="@Url.Action("Printing", "Order")" tabindex="8" class="t-button">Quay về</a>
+    </div>
+</div>
+}
+
+<script src="@Url.Content("~/Scripts/swfobject.js")" type="text/javascript" ></script>
+<script src="@Url.Content("~/Scripts/jquery.uploadify.v2.1.4.min.js")" type="text/javascript"></script>
+@{ Html.Telerik().Window()
+        .Name("MessageBoxUploadImage")
+        .Title("Upload File")
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Width(370)
+        .Height(300)
+        .Effects(fx => fx
+                    .Zoom()
+                    .Opacity()
+                    .OpenDuration(300)
+                    .CloseDuration(300)
+        )
+        .Content(@<text>
+            <script type="text/javascript">
+                function onMessageBoxCloseUploadImage() {
+                    $('#MessageBoxUploadImage').data('tWindow').center().close();
+                }
+
+                function onMessageBoxUploadImage(id, note) {
+                    $("#orderDetailId").val(id);
+                    $("#txtNote").val(note);
+                    document.getElementById("imgUserImagePath").src = "@photoNotExistFileName";
+                    $('#MessageBoxUploadImage').data('tWindow').center().open();
+                }
+                $("#fileuploaderUserImage").uploadify({
+                    'sizeLimit': 10240000,
+                    'uploader': '@Url.Content("~/Scripts/uploadify.swf")',
+                            'cancelImg': '@Url.Content("~/Content/images/cancel.png")',
+                    'buttonImg': '@Url.Content("~/Content/images/update_btn.png")',
+                    'buttonText': 'Upload A File',
+                    'height': '30',
+                    'width': '92',
+                    'script': '@Url.Action("OrderDetailFile", "Upload", new { area = "administrator" })',
+                    'folder': '@Url.Content("~/Uploads")',
+                    'fileDesc': 'Chọn Files',
+                    'multi': false,
+                    'auto': true,
+                    'onComplete': CompleteUpload,
+                    'onError': onErrorUpload
+                });
+                $("#fileuploaderQueue").hide();
+                    function CompleteUpload(event, queueID, fileObj, response, data) {
+                        document.getElementById("imgUserImagePath").src = "@photoExistedFileName";
+                        document.getElementById("hfMainPromoImagePath").value = response;
+                        return;
+                        //alert(fileObj.filePath + ' files uploaded successfully!');
+                    };
+
+                    function onErrorUpload(a, b, c, d) {
+                        if (d.status == 404)
+                            alert("Could not find upload script. Use a path relative to: " + "<?= getcwd() ?>");
+                        else if (d.type === "HTTP") {
+                            alert("error " + d.type + ": " + d.info);
+                        }
+                        else if (d.type === "File Size") {
+                            alert(d.type + " Limit: " + d.info / (10240000) + "MB");
+                        } else
+                            alert("error " + d.type + ": " + d.text);
+                    };
+            </script>
+            <form action="@Url.Action("UploadOrderDetailFile", "Order")" method="post">
+                <input type="hidden" id="orderDetailId" name="OrderDetailId" />
+                <input type="hidden" name="OrderId" value="@Model.OrderId"/>
+                <input type="hidden" id="hfMainPromoImagePath" name="FilePath" />
+                <table width="99%">
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <textarea rows="3" name="Note" id="txtNote" cols="40"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <img src="@photoNotExistFileName" width="128" height="128" id="imgUserImagePath"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-actions uploadbtn"  style="margin-left:55px">
+                                <input id="fileuploaderUserImage" type="file"/>
+                            </div>
+                        </td> 
+                        <td>
+                            <div class="form-actions"  style="margin-left:0px">
+                                <input type="submit" style="width: 76px; height: 33px; margin-bottom: 10px; margin-right: 43px;" class="t-button t-state-default" value="Cập nhật"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </text>)
+        .Render();
+}
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("DeleteOrderDetail", "Order", new { area = "administrator" })).ToHtmlString())
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.OrderDetailModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                .Filterable(false);
+            columns.Bound(x => x.AmountDisplay).Title("Số Lượng")
+                .Width(100)
+                .Filterable(false);
+            columns.Bound(x => x.PriceDisplay).Title("Đơn Giá")
+                .Width(100)
+                .Filterable(false);
+            columns.Bound(x => x.ExtraFeeDisplay).Title("Phụ thu")
+                .Width(100)
+                .Filterable(false);
+            columns.Bound(x => x.TotalCostDisplay).Title("Thành Tiền")
+                .Width(100)
+                .Filterable(false);
+            //columns.Bound(x => x.Note).Title("Ghi Chú")
+            //    .Sortable(false)
+            //    .Filterable(false);
+            columns.Bound(p => p.DownloadBiaLink)
+                .ClientTemplate("<#= DownloadBiaLink #>")
+                .HtmlAttributes(new { style = "text-align:center" })
+                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                .Title("Tải File 1")
+                .Width(50).Sortable(false)
+                .Filterable(false)
+                .Visible(Model.OrderId > 0);
+            columns.Bound(p => p.DownloadRuotLink)
+                .ClientTemplate("<#= DownloadRuotLink #>")
+                .HtmlAttributes(new { style = "text-align:center" })
+                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                .Title("Tải File 2")
+                .Width(50).Sortable(false)
+                .Filterable(false)
+                .Visible(Model.OrderId > 0);
+            columns.Bound(p => p.UploadLink)
+                .ClientTemplate("<#= UploadLink #>")
+                .HtmlAttributes(new { style = "text-align:center" })
+                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                .Title("Tải Lên")
+                .Width(50).Sortable(false)
+                .Filterable(false)
+                .Visible(WorkContext.Roles.Contains(RoleType.Administrator) || WorkContext.Roles.Contains(RoleType.KeToan) || WorkContext.Roles.Contains(RoleType.KinhDoanh));
+            columns.Bound(p => p.DownloadLink)
+                .ClientTemplate("<#= DownloadLink #>")
+                .HtmlAttributes(new {style = "text-align:center"})
+                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                .Title("Xem Lại")
+                .Width(50).Sortable(false)
+                .Filterable(false);
+            columns.Bound(p => p.OrderDetailId)
+                .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= OrderDetailId #>)'><img src=\"" + Url.Content("~/Content/Images/delete_16_16.png") + "\" /></a>")
+                .HtmlAttributes(new { style = "text-align:center" })
+                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                .Width(50).Sortable(false)
+                .Filterable(false)
+                .Visible(Model.OrderId <= 0);
+        }).DataBinding(dataBinding => dataBinding.Ajax().Select("GridModelOrderDetail", "Order"))
+    ) 
+<script type="text/javascript">
+    $(window).load(
+    function () {
+        GetCost();
+    });
+    function onComboBoxCustomerChange(e) {
+        SaveOrderToSession();
+        var customerId = e.value;
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetCustomerNote", "Customer")" + "?customerId=" + customerId,
+            success: function (data) {
+                $('#lblCustomerNote').text(data);
+            },
+            error: function () {
+                console.log('An error occurred');
+            }
+        });
+    }
+    function onComboBoxChange(e) {
+        SaveOrderToSession();
+        GetCost();
+        if ($("#Grid").data('tGrid')) {
+            $("#Grid").data('tGrid').rebind();
+        }
+        var myOfficeId = e.value;
+        if(myOfficeId == undefined)
+        {
+            myOfficeId = $('#hfMyOfficeId').val();
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetShippingServices", "Order")" + "?MyOfficeId=" + myOfficeId,
+            success: function (data) {
+                var ShippingServiceId = $('#hfShippingServiceId').val();
+                var dropDownList = $('#ShippingServiceId').data('tDropDownList');
+                if (data.ShippingServiceData.length > 0) {
+                    dropDownList.dataBind(data.ShippingServiceData);
+                    dropDownList.enable();
+                }
+                else {
+                    dropDownList.disable();
+                }
+                
+                if (!!ShippingServiceId) {
+                    dropDownList.select(ShippingServiceId);
+                }
+                else {
+                    dropDownList.select(0);
+                }
+
+                if (data.IsRetailCustomer == true) {
+                    $('#trTextCustomer').show();
+                    $('#trDropdownCustomer').hide();
+                }
+                else {
+                    $('#trDropdownCustomer').show();
+                    $('#trTextCustomer').hide();
+                }
+                
+            },
+            error: function () {
+                console.log('An error occurred');
+            }
+        });
+    }
+
+    function GetCost() {
+        var myOfficeId = $('#MyOfficeId').data('tDropDownList').value();
+        $.ajax({
+            url: '@Url.Action("GetCost", "Order")',
+            type: "POST",
+            dataType: "json",
+            // query will be the param used by your action method
+            data: { myOfficeId: myOfficeId },
+            success: function (data) {
+                $("#TotalCost").val(data.TotalCost);
+                $("#ExtraFee").val(data.ExtraFee);
+                $("#lblTotalCost").text("Tổng cộng: " + $.telerik.formatString('{0:n0}', data.TotalCost));
+                $("#lblExtraFee").text("Phụ thu: " + $.telerik.formatString('{0:n0}', data.ExtraFee));
+                $("#lblExtraFee2").text("Phụ thu: " + $.telerik.formatString('{0:n0}', data.ExtraFee));
+            }
+        });
+    }
+</script>
+<script>
+    $(window).load(
+    function () {
+        $("#ShowOnTop").change(function () {
+            SaveOrderToSession();
+        });
+        $("#Note").change(function () {
+            SaveOrderToSession();
+        });
+        $("#PaymentType").change(function () {
+            SaveOrderToSession();
+        });
+        $("#WaitForPrint").change(function () {
+            SaveOrderToSession();
+        });
+    });
+    function onComboBoxShippingServiceChange(e) {
+        SaveOrderToSession();
+    };
+    function SaveOrderToSession() {
+        var myOfficeId = $('#MyOfficeId').data('tDropDownList').value();
+        var CustomerId = $('#CustomerId').data('tDropDownList').value();
+        var ShippingService = $('#ShippingServiceId').data('tDropDownList');
+        var ShippingServiceId = 0;
+        if (ShippingService) {
+            ShippingServiceId = ShippingService.value();
+        }
+        var ShowOnTop = $("#ShowOnTop").is(':checked');
+        var WaitForPrint = $("#WaitForPrint").is(':checked');
+        var PaymentType = $("#PaymentType").val()
+        var Note = $("#Note").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AjaxSaveOrderToSession", "Order")",
+            dataType: "json",
+            data: { MyOfficeId: myOfficeId, Note: Note, CustomerId: CustomerId, ShippingServiceId: ShippingServiceId, ShowOnTop: ShowOnTop, WaitForPrint: WaitForPrint, WaitForPrint: WaitForPrint, PaymentType: PaymentType },
+            success: function (data) {
+            },
+            error: function () {
+                console.log('An error occurred');
+            }
+        });
+    }
+</script>

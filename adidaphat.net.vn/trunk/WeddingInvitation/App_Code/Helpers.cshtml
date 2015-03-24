@@ -1,0 +1,275 @@
+﻿@functions
+{
+    public static string GenName()
+    {
+        return Guid.NewGuid().ToString();
+    }
+}
+@helper DeleteConfirmMessageBox(string text, string actionName, string controllerName)
+    {
+    <script type="text/javascript">
+        function onMessageBoxClose() {
+            $('#tMessageBox').data('tWindow').center().close();
+        }
+
+        function onMessageBoxActionDelete(id) {
+            $("#deleteItemId").val(id);
+            $('#tMessageBox').data('tWindow').center().open();
+        }
+    </script>
+    <form action="/Administrator/@controllerName/@actionName" method="post">
+        <input type="hidden" id="deleteItemId" name="id" />
+        <div style="text-align:center"><p>@text</p></div>
+        <table>
+            <tr> 
+                <td>
+                    <div class="form-actions"  style="margin-left:55px">
+                        <input type="submit" style="height:25px;width:50px" class="t-button t-state-default" value="Yes"/>
+                    </div>
+                </td> 
+                <td>
+                    <div class="form-actions"  style="margin-left:0px">
+                        <input type="button" style="height:25px;width:50px" onclick="onMessageBoxClose();"
+                        class="t-button t-state-default" value="No"/>
+                    </div>
+                </td>
+            </tr> 
+        </table>
+    </form>
+}
+@helper DeleteConfirmMessageBox(string text, string url)
+    {
+    <script type="text/javascript">
+        function onMessageBoxClose() {
+            $('#tMessageBox').data('tWindow').center().close();
+        }
+
+        function onMessageBoxActionDelete(id) {
+            $("#deleteItemId").val(id);
+            $('#tMessageBox').data('tWindow').center().open();
+        }
+        function onMessageBoxActionDeleteIncludedStorage(id, storageId) {
+            $("#deleteItemId").val(id);
+            $("#deletestorageId").val(storageId);
+            $('#tMessageBox').data('tWindow').center().open();
+        }
+    </script>
+    <form action="@url" method="post">
+        <input type="hidden" id="deleteItemId" name="id" />
+        <input type="hidden" id="deletestorageId" name="storageId" />
+        <div style="text-align:center"><p>@text</p></div>
+        <table>
+            <tr> 
+                <td>
+                    <div class="form-actions"  style="margin-left:55px">
+                        <input type="submit" style="height:25px;width:50px" class="t-button t-state-default" value="Yes"/>
+                    </div>
+                </td> 
+                <td>
+                    <div class="form-actions"  style="margin-left:0px">
+                        <input type="button" style="height:25px;width:50px" onclick="onMessageBoxClose();"
+                        class="t-button t-state-default" value="No"/>
+                    </div>
+                </td>
+            </tr> 
+        </table>
+    </form>
+}
+@helper SearchPanel(string text, string btnSearch, string txtSearch, string textSearch)
+{
+    <div style="margin-bottom:50px;">
+        <div id="panel_search">
+            <div style="float: left; padding: 5px 0px 5px 0px">
+                <input type="text" id="@txtSearch" class="watermarkOn" value="@text" />
+            </div>
+            <div style="padding: 5px 0px 5px 0px;">
+                <button class="t-button" style="cursor:pointer; padding-top: 0px !important;color:#000 !important" name="Search" id="@btnSearch">
+                    @textSearch
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function onDataBinding(e) {
+            var isVisibleStatusImport = false;
+            var isInvisibleParcelHasSuccess = false;
+            if ($("#chkVisibleStatusImport")) {
+                isVisibleStatusImport = $('#chkVisibleStatusImport').is(':checked');
+                isInvisibleParcelHasSuccess = $('#chkInvisibleParcelHasSuccess').is(':checked');
+            }
+
+            var searchModel = {
+                search: $('#@txtSearch').val() == "Nhập vào từ khóa tìm kiếm..." ? "" : $('#@txtSearch').val(),
+                VisibleStatusImport: isVisibleStatusImport,
+                InvisibleParcelHasSuccess: isInvisibleParcelHasSuccess
+            };
+            e.data = searchModel;
+        }
+    </script>
+}
+@helper SearchPanel(string text, string btnSearch, string txtSearch, bool showFromSearch = true)
+    {
+    <div style="margin-bottom:50px; @(showFromSearch ? string.Empty : "display:none") ">
+        <div id="panel_search">
+            <div style="float: left; padding: 5px 0px 5px 0px">
+                <input type="text" id="@txtSearch" class="watermarkOn" value="@text" />
+            </div>
+            <div style="padding: 5px 0px 5px 0px;">
+                <button class="t-button" style="cursor:pointer; padding-top: 0px !important;color:#000 !important" name="Search" id="@btnSearch">
+                    Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function onDataBinding(e) {
+            var isVisibleStatusImport = false;
+            var isInvisibleParcelHasSuccess = false;
+            if ($("#chkVisibleStatusImport")) {
+                isVisibleStatusImport = $('#chkVisibleStatusImport').is(':checked');
+                isInvisibleParcelHasSuccess = $('#chkInvisibleParcelHasSuccess').is(':checked');
+            }
+            
+            var searchModel = {
+                search: $('#@txtSearch').val() == "Nhập vào từ khóa tìm kiếm..." ? "" : $('#@txtSearch').val(),
+                VisibleStatusImport: isVisibleStatusImport,
+                InvisibleParcelHasSuccess: isInvisibleParcelHasSuccess
+            };
+            e.data = searchModel;
+        }
+    </script>
+}
+@helper InlineButton(string buttonText, string onClick, string cssLinkContainer, string cssLinkClass)
+    {
+    <div class="@cssLinkContainer">
+        <a href="javascript:void(0)" class="t-button t-button-icontext @cssLinkClass" onclick="@onClick">
+            <span class="t-icon t-add"></span>@buttonText </a>
+    </div>
+}
+@helper InlineButton(string buttonText, string onClick, string cssLinkClass)
+    {
+    <div class="labeleditorContainer">
+        <a href="javascript:void(0)" class="t-button t-button-icontext @cssLinkClass" onclick="@onClick">
+            <span class="t-icon t-add"></span>@buttonText </a>
+    </div>
+}
+@helper Button(string buttonText, string onClick, string cssClass, string align)
+    {
+    <div style="padding: 0px 0px 5px 0px;" align="@align">
+        <a href="javascript:void(0)" class="t-button t-button-icontext @cssClass" onclick="@onClick">
+            <span class="t-icon t-add"></span>@buttonText </a>
+    </div>
+
+}
+@helper Button(string buttonText, string onClick, string cssClass, string align, string id)
+    {
+    <div style="padding: 0px 0px 5px 0px;" align="@align">
+        <a href="javascript:void(0)" id="@id" class="t-button t-button-icontext @cssClass" onclick="@onClick">
+            <span class="t-icon t-add"></span>@buttonText </a>
+    </div>
+
+}
+@helper ButtonEdit(string buttonText, string onClick, string cssClass, string align, string id)
+    {
+    <div style="padding: 0px 0px 5px 0px;" align="@align">
+        <a href="javascript:void(0)" id="@id" class="t-button t-button-icontext @cssClass" onclick="@onClick">
+            <span class="t-icon t-edit"></span>@buttonText </a>
+    </div>
+
+}
+@helper ButtonDelete(string buttonText, string onClick, string cssClass, string align)
+    {
+    <div style="padding: 0px 0px 5px 0px;" align="@align">
+        <a href="javascript:void(0)" class="t-button t-button-icontext @cssClass" onclick="@onClick">
+            <span class="t-icon t-delete"></span>@buttonText </a>
+    </div>
+
+}
+@helper SaveClose(string btnSaveId, string btnCloseId)
+    {
+    @(SaveClose(btnSaveId, "Lưu", btnCloseId, "Đóng"))
+}
+@helper SaveClose(string btnSaveId, string saveText, string btnCloseId, string closeText)
+    {
+    <div style="display: inline;">
+        <div id="okMessage" style="color: Green; padding-top: 10px; background: #fff; float: left;">
+        </div>
+        <div id="error" style="color: Red; padding-top: 10px; float: left">
+        </div>
+        <div align="right" class="buttons" style="padding-top: 15px">
+            <button id="@btnSaveId" type="submit" class="positive">
+                <img src="../../Content/Images/ok_16x16.png" />
+                @saveText
+            </button>
+            <button id="@btnCloseId" type="button" class="positive">
+                <img src="../../Content/Images/cancel_16_16.png" />
+                @closeText
+            </button>
+        </div>
+    </div>
+}
+@helper InitializeWindowsSubmitHelper(string elementGrid, string elementSubmit, string elementCancel, string elementWindowHelper, string currentFormId, string idSelector)
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+             new WindowSubmitHelper($("#@elementGrid"), $("#@elementSubmit"), $("#@elementCancel"), @elementWindowHelper, $('#@currentFormId'), $('#@idSelector'));
+        });
+    </script>
+}
+@helper InitializeSimpleWindowsSubmitHelper(string elementSubmit, string elementCancel, string elementWindowHelper, string currentFormId, string onSucceeded, string onFailed)
+    {
+    @InitializeSimpleWindowsSubmitHelper(elementSubmit, elementCancel, elementWindowHelper, currentFormId, onSucceeded, onFailed, "null");
+}
+@helper InitializeSimpleWindowsSubmitHelper(string elementSubmit, string elementCancel, string elementWindowHelper, string currentFormId, string onSucceeded, string onFailed, string checkBeforeSubmit)
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+             new SimpleSubmitHelper($("#@elementSubmit"), $("#@elementCancel"), @elementWindowHelper, $("#@currentFormId"), @onSucceeded, @onFailed, @checkBeforeSubmit);
+        });
+    </script>
+}
+@helper InitializeSearch(string elementGrid, string elementSubmit, string elementCancel, string elementWindowHelper)
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#@elementGrid"));
+        });
+    </script>
+}
+@helper InitializeGlobalVariablesAndFunctions()
+    {
+    <script type="text/javascript">
+        /*******************************
+        GLOBAL FUNCTIONS AND VARIABLES
+        ******************************/
+        var create, edit; //just an object helper for create/edit usage
+        //var isChangeModelFlag = false; //flag if data has been changed
+
+        //when we click on create button
+        function openCreateById(id) { if (create) create.OpenWindow(id); }
+        //when we click on create button
+        function openCreate() { if (create) create.OpenWindow(); }
+        //when we click on edit link
+        function openEdit(id) { if (edit) edit.OpenWindow(id); }
+        //HUYDO: solved for the close event, put it here 
+        //Html.Osd().HiddenPopupWindow(name: "Window_Create", title: Resources.Resource.ProductCreateTitle, onClose: "confirmClose", width: 1100, height: 400)
+        //Html.Osd().HiddenPopupWindow(name: "Window_Edit", title: Resources.Resource.ProductEditTitle, onClose: "confirmClose", width: 1100, height: 400)
+        //when we click the window popup 's close button
+        function confirmClose(event) {
+            if (create != undefined & edit != undefined) {
+                if (create.IsOpening) { if (!create.ConfirmClose()) event.preventDefault(); }
+                if (edit.IsOpening) { if (!edit.ConfirmClose()) event.preventDefault(); }
+            }
+            //normal closing if nothing new reaches here, dont do anything else
+        }
+
+    </script>
+}
+@helper RegisterCascadingDropDowns(string parentDropDown, string childDropDown, string controller, string action, string valueField, string textField, string onParentDropDownChange, string onChildDropDownChange)
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+        new CascadingDropDownHelper($("#@parentDropDown"), $("#@childDropDown"), "@controller", "@action", '@valueField', '@textField', @onParentDropDownChange, @onChildDropDownChange);
+    });
+    </script>
+}

@@ -1,0 +1,184 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.UserModel
+  
+@using (Html.BeginForm("save", "user", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.UserId > 0 ? "Sửa nhân viên" : "Tạo mới nhân viên")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" class="t-button">Quay lại</a>
+        </div>
+    </div>
+    
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UserId)
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Họ")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.FirstName)
+                @Html.ValidationMessageFor(model => model.FirstName, "Họ là bắt buộc nhập.")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Tên")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.LastName)
+                @Html.ValidationMessageFor(model => model.LastName, "Tên là bắt buộc nhập.")
+            </td>
+        </tr>  
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Tên truy cập")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email, "Tên truy cập là bắt buộc nhập.")
+            </td>
+            <td></td>
+        </tr>
+        @if (Model.UserId > 0)
+        {
+            @Html.HiddenFor(model => model.Password)
+            @Html.HiddenFor(model => model.ConfirmPassword)
+            <tr>
+                <td class="adminTitle">
+                    @Html.Label("Mật khẩu")
+                </td>
+                <td class="adminData" style="padding-bottom:10px;padding-top:10px;">
+                    <a href="@Url.Action("ChangePassword", "User", new { id = Model.UserId})">Thay đổi mật khẩu</a>
+                </td>
+            </tr> 
+        }
+        else
+        {
+        <tr>
+            <td class="adminTitle">
+                 @Html.Label("Mật khẩu")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+       
+                 @Html.PasswordFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                 @Html.Label("Xác nhận mật khẩu")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.PasswordFor(model => model.ConfirmPassword)
+                @Html.ValidationMessageFor(model => model.ConfirmPassword)
+            </td>
+        </tr>
+        }
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Quyền")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.RoleId, new SelectList(Model.AvailableUserRoles, "RoleId", "RoleName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.RoleId, "Quyền là bắt buộc chọn.")
+            </td>
+        </tr>
+        @*<tr>
+            <td class="adminTitle">
+                @Html.Label("Cho phép duyệt đơn hàng giao trong ngày")
+            </td>
+            <td align="left">
+                @Html.CheckBoxFor(model => model.DeliveryInDay)
+            </td>
+        </tr>*@  
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Chi nhánh")
+            </td>
+            <td class="left" style="width:99%">
+                @foreach (var item in Model.AvailableOffices)
+                {
+                    <div class="checkboxlist">
+                        <input type="checkbox" name="BelongOffices" value="@item.MyOfficeId" @(Model.BelongOffices.Contains(@item.MyOfficeId) ? "checked=checked" : string.Empty)>
+                        <span>@item.OfficeName</span>
+                    </div>
+                }
+                @*@Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.AvailableOffices, "MyOfficeId", "OfficeName"), "-Chọn-")
+    @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc chọn.")*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Kho")
+            </td>
+            <td class="left" style="border-top: 3px solid rgb(223, 223, 223); width: 99%; padding-top: 5px;">
+                @foreach (var item in Model.AvailableStorages)
+                {
+                    <div class="checkboxlist">
+                        <input type="checkbox" name="BelongStorages" value="@item.StorageId" @(Model.BelongStorages.Contains(@item.StorageId) ? "checked=checked" : string.Empty)>
+                        <span>@item.StorageName</span>
+                    </div>
+                }
+                @*@Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.AvailableStorages, "StorageId", "StorageName"), "-Chọn-")
+            @Html.ValidationMessageFor(model => model.MyOfficeId, "Kho là bắt buộc chọn.")*@
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tiền lương")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Salary).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Salary)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Địa chỉ")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.Address)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Cho phép đăng nhập từ")
+            </td>
+            <td>
+                @Html.Telerik().TimePickerFor(model => model.AllowLoginFrom).Interval(15)
+                @Html.ValidationMessageFor(model => model.AllowLoginFrom, "Dữ liệu không đúng.")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Cho phép đăng nhập đến")
+            </td>
+            <td>
+                @Html.Telerik().TimePickerFor(model => model.AllowLoginTo).Interval(15)
+                @*@Html.ValidationMessageFor(model => model.AllowLoginTo, "Dữ liệu không đúng.")*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Kích hoạt")
+            </td>
+            <td align="left">
+                @Html.CheckBoxFor(model => model.IsLockedOut)
+            </td>
+        </tr>     
+    </table>
+}
+
+
+

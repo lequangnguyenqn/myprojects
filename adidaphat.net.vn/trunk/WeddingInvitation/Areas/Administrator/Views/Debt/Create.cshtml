@@ -1,0 +1,116 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.DebtModel
+@{
+    ViewBag.Title = "Tạo công nợ cuối tháng/cuối kỳ theo chi nhánh";
+    Layout = "~/Areas/Administrator/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("Save", "Debt", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            Tạo công nợ cuối tháng/cuối kỳ theo chi nhánh
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.DebtId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Từ ngày")
+            </td>
+            <td align="left">
+                @Html.Telerik().DatePickerFor(model => model.FromDate).ClientEvents(events => events.OnChange("GetCost"))
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Đến ngày")
+            </td>
+            <td align="left">
+                @Html.Telerik().DatePickerFor(model => model.ToDate).ClientEvents(events => events.OnChange("GetCost"))
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tổng tiền ban đầu")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Total).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Total)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Đã thu")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Paid).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Paid)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Còn lại")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.PaidLeft).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.PaidLeft)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}
+<script type="text/javascript">
+    $(window).load(
+    function () {
+        $("#MyOfficeId").change(function () {
+            GetCost();
+        });
+    });
+    function GetCost() {
+        var myOfficeId = $('#MyOfficeId').val();
+        var fromDateTime = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', fromDateTime.value());
+        var toDateTime = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', toDateTime.value());
+        $.ajax({
+            url: '@Url.Action("GetCost", "Debt")',
+            type: "POST",
+            dataType: "json",
+            // query will be the param used by your action method
+            data: {
+                myOfficeId: myOfficeId,
+                FromDate: fromDate,
+                ToDate: toDate
+            },
+            success: function (data) {
+                var total = $("#Total").data("tTextBox");
+                total.value(data.Total);
+                var paid = $("#Paid").data("tTextBox");
+                paid.value(data.Paid);
+                var paidLeft = $("#PaidLeft").data("tTextBox");
+                paidLeft.value(data.PaidLeft);
+            }
+        });
+    }
+</script>

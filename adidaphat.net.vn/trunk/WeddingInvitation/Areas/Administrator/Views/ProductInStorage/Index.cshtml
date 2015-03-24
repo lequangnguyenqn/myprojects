@@ -1,0 +1,177 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.IndexProductInStorageModel
+@{
+    ViewBag.Title = "Báo cáo tồn kho";
+    var products = Model.ProductsSelected + ",";
+    var storages = Model.StoragesSelected + ",";
+    var defaultChecked = ((!Model.GroupByProduct && !Model.GroupByStorage) || Model.GroupByProduct) ? true : false;
+}
+@using (Html.BeginForm("Index", "ProductInStorage", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+            Báo cáo tồn kho
+        </div>
+        <div class="options">
+            @*<a onclick="Preview();" class="t-button">Xem</a>*@
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Xem</button>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.ProductsSelected)
+    @Html.HiddenFor(model => model.StoragesSelected)
+    <table width="100%">
+        <tr>
+            <td>
+                @Html.CheckBox("GroupByProduct", defaultChecked)
+                <b>@Html.Label("Nhóm theo sản phẩm")</b>
+            </td>
+            <td>
+                @Html.CheckBox("GroupByStorage")
+                <b>@Html.Label("Nhóm theo kho")</b>
+            </td>
+            <td>
+                @Html.Label("Sản phẩm")
+            </td>
+            <td>
+                @Html.Label("Kho")
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                @Html.DropDownList("ListProducts", new SelectList(Model.Products, "ProductId", "ProductName"))
+            </td>
+            <td>
+                @Html.DropDownList("ListStorages", new SelectList(Model.Storages, "StorageId", "StorageName"))
+            </td>
+        </tr>
+    </table>
+    <br />
+}
+
+@(Html.Telerik().Grid(Model.ProductInStorageModels)
+.Name("Grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                            .Width(250)
+                            .Filterable(false);
+                        columns.Bound(x => x.StorageName).Title("Kho")
+                            .Filterable(false);
+                        columns.Bound(x => x.Amount).Title("Số Lượng")
+                            .Format("{0:n0}")
+                            .Aggregate(aggreages => aggreages.Sum())
+                            .GroupFooterTemplate(@<text>Tổng cộng: @item.Sum.Format("{0:n0}")</text>)
+                            .Filterable(false);
+                    }).Localizable("vi-VN")
+                    .Pageable(paging => paging.Enabled(false))
+                    .Scrollable(scrolling => scrolling.Enabled(false))
+                    .Groupable(grouping => grouping.Groups(groups =>
+                    {
+                        if (Model.GroupByProduct || (!Model.GroupByProduct && !Model.GroupByStorage))
+                        {
+                            groups.Add(o => o.ProductName);
+                        }
+                        if (Model.GroupByStorage)
+                        {
+                            groups.Add(o => o.StorageName);
+                        }
+                    }).Visible(false)
+      ))
+@{ Html.Telerik().ScriptRegistrar().Globalization(true); }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ListProducts").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#ListProducts").multiselect("uncheckAll");
+        $("#ListStorages").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#ListStorages").multiselect("uncheckAll");
+        jQuery.validator.methods["date"] = function (value, element) { return true; };
+        $("#ListProducts").bind("multiselectclick", function (event, ui) {
+            var listProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            $("#ProductsSelected").val(listProducts);
+        });
+        $("#ListProducts").bind("multiselectcheckall", function (event, ui) {
+            var listProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            $("#ProductsSelected").val(listProducts);
+        });
+        $("#ListProducts").bind("multiselectuncheckall", function (event, ui) {
+            var listProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            $("#ProductsSelected").val(listProducts);
+        });
+        $("#ListProducts").multiselect("widget").find(":checkbox").each(function () {
+            if ("@products".indexOf(this.value + ",") >= 0)
+                this.click();
+        });
+        $("#ListStorages").bind("multiselectclick", function (event, ui) {
+            var listProducts = $("#ListStorages").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            $("#StoragesSelected").val(listProducts);
+        });
+        $("#ListStorages").bind("multiselectcheckall", function (event, ui) {
+            var listProducts = $("#ListStorages").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            $("#StoragesSelected").val(listProducts);
+        });
+        $("#ListStorages").bind("multiselectuncheckall", function (event, ui) {
+            var listProducts = $("#ListStorages").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            $("#StoragesSelected").val(listProducts);
+        });
+        $("#ListStorages").multiselect("widget").find(":checkbox").each(function () {
+            if ("@storages".indexOf(this.value + ",") >= 0)
+                 this.click();
+         });
+    });
+    function Preview() {
+        var ListProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var FromListStorages = $("#ListStorages").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        jQuery.ajaxSettings.traditional = true;
+        $("#ProductInStorage").data('tGrid')
+                         .rebind({
+                             ListProducts: ListProducts,
+                             FromListStorages: FromListStorages
+                         });
+
+    }
+    function onDataBinding(e) {
+        var ListProducts = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var FromListStorages = $("#ListStorages").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var searchModel = {
+            ListProducts: ListProducts,
+            FromListStorages: FromListStorages
+        };
+        e.data = searchModel;
+    }
+    </script>

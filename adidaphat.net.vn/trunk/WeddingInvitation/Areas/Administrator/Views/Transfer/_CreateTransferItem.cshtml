@@ -1,0 +1,75 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.TransferItemModel
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+    Layout = null;
+}
+@using (Html.BeginForm("SaveTransferItem", "Transfer", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.TransferItemId > 0 ? "Sửa sản phẩm" : "Thêm sản phẩm")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Thêm</button>
+            @*<a onclick="hideCreateForm()" tabindex="8" class="t-button">Quay về</a>*@
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.TransferItemId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Sản phẩm")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CategoryId, new SelectList(Model.Categories, "CategoryId", "CategoryName"), "-Chọn-")
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle"></td>
+            <td align="left" id="listProduct" style="width:99%"></td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số lượng")
+            </td>
+            <td style="padding-bottom:10px">
+                @(Html.Telerik().IntegerTextBoxFor(model => model.Amount).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator("."))
+                @Html.ValidationMessageFor(model => model.Amount)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}
+<script type="text/javascript">
+    $(window).load(
+    function () {
+        $("#CategoryId").change(function () {
+            var categoryId = $('#CategoryId').val();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetProducts", "Order")" + "?categoryId=" + categoryId,
+                success: function (data) {
+                    var html = "";
+                    $.each(data, function (idx, obj) {
+                        html += "<div class=\"checkboxlistAddProduct\"><input type=\"checkbox\" name=\"ProductIds\" value=" + obj.Id + " checked=checked><span style=\"padding-left:3px;\">" + obj.Name + "</span></div>"
+                    });
+                    $('#listProduct').html(html);
+                    $('#listProduct').show(400);
+            },
+            error: function () {
+                console.log('An error occurred');
+            }
+            });
+        });
+    });
+</script>

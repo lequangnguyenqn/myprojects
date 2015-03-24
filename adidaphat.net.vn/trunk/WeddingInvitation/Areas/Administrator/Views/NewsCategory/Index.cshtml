@@ -1,0 +1,114 @@
+﻿@model IQueryable<WeddingInvitation.Core.Models.ContentManagement.NewsCategoryItem>
+@{Html.Telerik().ScriptRegistrar().Scripts(script => script.AddGroup("Page", group => group
+      .Add("~/Areas/Administrator/Scripts/Views/Category/Index.js")
+      .Combined(false)
+      .Compress(false)
+      ));}
+@{
+    ViewBag.Title = "Danh sách danh mục";
+}
+<style type="text/css">
+    .disable_item
+    {
+        color: Gray;
+    }
+    .t-treeview span.t-in
+    {
+        cursor: pointer;
+    }
+</style>
+<script type="text/javascript">
+    function treeView() {
+        return $('#TreeView').data('tTreeView');
+    }
+
+    function onSelect(e) {
+        selectedId = treeView().getItemValue(e.item);
+        if (selectedId < 0) {
+        }
+        else {
+            var url = "@Url.Action("Edit")" + "/" + selectedId;
+            window.location = url;
+        }
+    }
+    function onNodeDropped(e) {
+                var treeview = treeView();
+                
+                var item = treeview.getItemValue(e.item);
+                var destination = treeview.getItemValue(e.destinationItem);
+                if(destination == "-1"){
+                }
+                var data = {};
+                data.item = item;
+                data.destinationitem = destination;
+                data.position = e.dropPosition;
+
+                $.ajax({
+                    cache:false,
+                    url: "@Url.Action("TreeDrop")",
+                    data: data,
+                    type: "POST",
+                    success: function () {
+                        $(this).addClass("done");
+                    }
+                });
+            }
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+        <span>Danh sách danh mục</span>
+    </div>
+    <div class="options">
+        <a href="@Url.Action("create")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+@Helpers.InitializeGlobalVariablesAndFunctions()
+<div>
+    <table style="border: 0px none; border-collapse: separate;" width="99%">
+        <tr>
+            <td style="width: 65%; border-radius: 10px;">
+                <table width="99%" class="tablenoborder">
+                    <tr>
+                        <td valign="top">
+                            @(Html.Telerik().TreeView()
+                                    .Name("TreeView")
+                                            .BindTo(Model, mappings =>
+                                            {
+                                                mappings.For<WeddingInvitation.Core.Models.ContentManagement.NewsCategoryItem>(binding => binding
+                                                .ItemDataBound((item, category) =>
+                                                {
+                                                    item.Text = category.CategoryName;
+                                                    item.Value = category.NewsCategoryItemId.ToString();
+                                                    if (category.CategoryName == "Categories")
+                                                    {
+                                                        item.Expanded = true;
+                                                        item.Selected = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        item.Expanded = false;
+                                                    }
+                                                    if (category.Active == false)
+                                                    {
+                                                        item.HtmlAttributes["class"] = "disable_item";
+                                                    }
+                                                    item.ImageUrl = Url.Content("~/Areas/Administrator/Content/images/ico-content.png");
+                                                })
+                                                .Children(category => category.Children));
+                                            })
+                                            .ClientEvents(events => events
+                                                .OnSelect("onSelect")
+                                                .OnNodeDropped("onNodeDropped")
+                                            ).ShowLines(true)
+                        .DragAndDrop(true))
+                        </td>
+                        <td valign="top" width="150">
+                            @*@Helpers.ButtonEdit(buttonText: Resources.Resource.btnEdit, onClick: "", cssClass: "t-state-disabled", align: "right", id: "btnEdit")*@
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

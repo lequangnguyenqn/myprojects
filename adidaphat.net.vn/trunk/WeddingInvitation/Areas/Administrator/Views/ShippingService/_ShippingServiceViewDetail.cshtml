@@ -1,0 +1,74 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ShippingServiceModel
+@using (Html.BeginForm("Save", "ShippingService", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.ShippingServiceId > 0 ? "Sửa chành xe" : "Tạo mới chành xe")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.ShippingServiceId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên chành xe")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.ShippingServiceName)
+                @Html.ValidationMessageFor(model => model.ShippingServiceName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Giờ xe chạy")
+            </td>
+            <td>
+                @Html.Telerik().TimePickerFor(model => model.StartAt).Interval(15)
+                @*@Html.ValidationMessageFor(model => model.AllowLoginTo, "Dữ liệu không đúng.")*@
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Bến xe đậu")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CoachStation)
+                @Html.ValidationMessageFor(model => model.CoachStation)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Điện thoại")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.PhoneNumber)
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Địa chỉ")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Address, new { @rows = "5"})
+                @Html.ValidationMessageFor(model => model.Address)
+            </td>
+        </tr>
+    </table>
+}

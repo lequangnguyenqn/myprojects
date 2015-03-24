@@ -1,0 +1,305 @@
+﻿@using WeddingInvitation.Areas.Administrator.Models
+@using WeddingInvitation.Data
+@using WeddingInvitation.Infrastructure;
+@model OrderModel
+@{
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutForJQuery17.cshtml";
+    ViewBag.Title = "Đặt hàng";
+}
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            @using (Html.BeginForm("SaveOrder", "Home", FormMethod.Post))
+            {
+                <div class="section-header">
+                    <div class="title">
+                        <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+                        Đặt hàng (chỉ cần nhập lại số điện thoại nếu bạn đã từng đặt hàng trước đó)
+                    </div>
+                    <div class="options">
+                        <button type="submit" name="save" value="Save" tabindex="6" class="t-button" style="font-weight:bold;">Lưu đơn hàng</button>
+                        <a href="@Url.Action("CreateOrder", "Home")" tabindex="8" class="t-button">Tạo lại</a>
+                    </div>
+                </div>
+
+                <input type="hidden" id="hfMyOfficeId" value="@Model.MyOfficeId" />
+                @Html.HiddenFor(model => model.OrderId)
+                @Html.HiddenFor(model => model.TotalCost)
+                @Html.HiddenFor(model => model.ExtraFee)
+                @Html.HiddenFor(model => model.BackId)
+                @Html.HiddenFor(model => model.CustomerId)
+                <table width="99%">
+                    <tr id="trTextCustomer">
+                        <td width="100" class="adminTitle">
+                            @Html.Label("Mã khách hàng = Số điện thoại")
+                            <span class="field_required">*</span>
+                        </td>
+                        <td class="adminData">
+                            @Html.TextBoxFor(model => model.CustomerPhone, new { title = "Nếu bạn đặt hàng lần đầu tiên thì chọn vào nút <b>Đăng ký mới</b>" })
+                            @Html.ValidationMessageFor(model => model.CustomerPhone)
+                            <a onclick="openCreateCustomerForm()" class="t-button">Đăng ký mới</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100" class="adminTitle">
+                            @Html.Label("Tỉnh")
+                            <span class="field_required">*</span>
+                        </td>
+                        <td class="adminData">
+                            @(Html.Telerik().DropDownListFor(model => model.MyOfficeId)
+                                  .Name("MyOfficeId").HtmlAttributes(new { style = "clear:both; width: 312px; float: left;" })
+                                  .BindTo(new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"))
+                                  .Placeholder("-Chọn-")
+                                  .ClientEvents(events => events
+                                      .OnChange("onComboBoxChange")))
+                            @*@Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"), "-Chọn-")*@
+                            @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc.")
+                            <label id="lblTotalCost" style="text-align: right; float: right; font-size: 17px; color: rgb(0, 93, 182); font-weight:bold;">Tổng cộng: 0</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.Label("Phương thức thanh toán")
+                        </td>
+                        <td class="left">
+                            <label style="text-align: right; float: right; font-size: 17px; color: rgb(0, 159, 255); display:none;" id="lblExtraFee2">Phụ thu: 0</label>
+                            <div>
+                                <input type="radio" id="InShippingPlace" name="PaymentType" value="@((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InShippingPlace)" @((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InShippingPlace == Model.PaymentType ? "checked=checked" : string.Empty)>
+                                <span>Giao hàng nhận tiền</span>
+                            </div>
+                            <div>
+                                <input type="radio" id="Tranfer" name="PaymentType" value="@((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.Tranfer)" @((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.Tranfer == Model.PaymentType ? "checked=checked" : string.Empty)>
+                                <span>Chuyển khoản</span>
+                            </div>
+                            <div>
+                                <input type="radio" id="InOffice" name="PaymentType" value="@((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InOffice)" @((int)WeddingInvitation.Core.Models.Orders.PaymentTypes.InOffice == Model.PaymentType ? "checked=checked" : string.Empty)>
+                                <span>Tới lấy</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100" class="adminTitle">
+                            @Html.Label("Chành xe")
+                        </td>
+                        <td class="adminData">
+                            @Html.TextBoxFor(model => model.ShippingServiceName)
+                            @Html.ValidationMessageFor(model => model.ShippingServiceName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100" class="adminTitle">
+                            @Html.Label("Ghi chú")
+                        </td>
+                        <td class="adminData">
+                            @Html.TextAreaFor(model => model.Note, new { @rows = "3" })
+                            @Html.ValidationMessageFor(model => model.Note)
+                        </td>
+                    </tr>
+                </table>
+            }
+            <div class="section-header">
+                <div class="title">
+                    <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+                    Danh sách sản phẩm
+                </div>
+            </div>
+            @Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", Url.Action("DeleteOrderDetail", "Home", new { area = "" })).ToHtmlString())
+            @(Html.Telerik().Grid<OrderDetailModel>()
+                  .Name("Grid")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                          .Filterable(false);
+                      columns.Bound(x => x.AmountDisplayToCustomer).Title("Số Lượng")
+                          .Width(100)
+                          .Filterable(false);
+                      columns.Bound(x => x.PriceDisplay).Title("Đơn Giá")
+                        .Width(100)
+                        .Filterable(false);
+                      columns.Bound(x => x.ExtraFeeDisplay).Title("Phụ thu")
+                          .Width(100)
+                          .Filterable(false);
+                      columns.Bound(x => x.TotalCostDisplay).Title("Thành Tiền")
+                          .Width(100)
+                          .Filterable(false);
+                      columns.Bound(p => p.DownloadBiaLink)
+                          .ClientTemplate("<#= DownloadBiaLink #>")
+                          .HtmlAttributes(new { style = "text-align:center" })
+                          .HeaderHtmlAttributes(new { style = "text-align:center" })
+                          .Title("Tải File 1")
+                          .Width(50).Sortable(false)
+                          .Filterable(false);
+                      columns.Bound(p => p.DownloadRuotLink)
+                          .ClientTemplate("<#= DownloadRuotLink #>")
+                          .HtmlAttributes(new { style = "text-align:center" })
+                          .HeaderHtmlAttributes(new { style = "text-align:center" })
+                          .Title("Tải File 2")
+                          .Width(50).Sortable(false)
+                          .Filterable(false);
+                      columns.Bound(p => p.OrderDetailId)
+                          .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= OrderDetailId #>)'><img src=\"" + Url.Content("~/Content/Images/delete_16_16.png") + "\" /></a>")
+                          .HtmlAttributes(new { style = "text-align:center" })
+                          .HeaderHtmlAttributes(new { style = "text-align:center" })
+                          .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                          .Width(50).Sortable(false)
+                          .Filterable(false)
+                          .Visible(Model.OrderId <= 0);
+                  }).DataBinding(dataBinding => dataBinding.Ajax().Select("GridModelOrderDetail", "Home", new { area = "" }))
+                  )
+            <script type="text/javascript">
+                $(window).load(
+                    function() {
+                        if ("@Model.Finished" == 'True') {
+                            $('#SaveComplete').data('tWindow').center().open();
+                        }
+                        $("#CustomerPhone").tooltipster({
+                            theme: 'tooltipster-light',
+                            contentAsHTML: true,
+                            trigger: 'click'
+                        });
+                        GetCost();
+                        GetCustomerInfo();
+                        $("#CustomerPhone").blur(function() {
+                            GetCustomerInfo();
+                        });
+                });
+
+                function GetCustomerInfo() {
+                    var phoneNumber = $("#CustomerPhone").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetCustomerInfo", "Home", new {area = ""})" + "?phoneNumber=" + phoneNumber,
+                        success: function(data) {
+                            $('#CustomerId').val(data.CustomerId);
+                            if (data.MyOfficeId > 0) {
+                                $('#MyOfficeId').data('tDropDownList').value(data.MyOfficeId)
+                            }
+                            $('#ShippingServiceName').val(data.ShippingServiceName)
+                            if (data.PaymentType == "@((int) WeddingInvitation.Core.Models.Orders.PaymentTypes.InOffice)") {
+                                $('#InOffice').prop("checked", true);
+                            } else if (data.PaymentType == "@((int) WeddingInvitation.Core.Models.Orders.PaymentTypes.InShippingPlace)") {
+                                $('#InShippingPlace').prop("checked", true);
+                            } else if (data.PaymentType == "@((int) WeddingInvitation.Core.Models.Orders.PaymentTypes.Tranfer)") {
+                                $('#Tranfer').prop("checked", true);
+                            }
+                        },
+                    error: function() {
+                        console.log('An error occurred');
+                    }
+                });
+                }
+
+                function onComboBoxCustomerChange(e) {
+                    var customerId = e.value;
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("GetCustomerNote", "Home", new {area = ""})" + "?customerId=" + customerId,
+                        success: function (data) {
+                            $('#lblCustomerNote').text(data);
+                        },
+                        error: function () {
+                            console.log('An error occurred');
+                        }
+                    });
+                }
+                function onComboBoxChange(e) {
+                    if ($("#Grid").data('tGrid')) {
+                        $("#Grid").data('tGrid').rebind();
+                    }
+                    GetCost();
+                }
+
+                function GetCost() {
+                    var myOfficeId = $('#MyOfficeId').data('tDropDownList').value();
+                    $.ajax({
+                        url: '@Url.Action("GetCost", "Home")',
+                        type: "POST",
+                        dataType: "json",
+                        // query will be the param used by your action method
+                        data: { myOfficeId: myOfficeId },
+                        success: function (data) {
+                            $("#TotalCost").val(data.TotalCost);
+                            $("#ExtraFee").val(data.ExtraFee);
+                            $("#lblTotalCost").text("Tổng cộng: " + $.telerik.formatString('{0:n0}', data.TotalCost));
+                            $("#lblExtraFee").text("Phụ thu: " + $.telerik.formatString('{0:n0}', data.ExtraFee));
+                            $("#lblExtraFee2").text("Phụ thu: " + $.telerik.formatString('{0:n0}', data.ExtraFee));
+                        }
+                    });
+                }
+            </script>
+        </td>
+        <td class="rightcol">
+            @Html.Action("CreateOrderDetail", "Home")
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function openCreateCustomerForm() {
+        $('#CreateCustomer').data('tWindow').center().open();
+    }
+
+</script>
+@{ Html.Telerik().Window()
+        .Name("CreateCustomer")
+        .Title("Đăng ký khách hàng mới")
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Width(630)
+        .Height(400)
+        .Effects(fx => fx
+                    .Zoom()
+                    .Opacity()
+                    .OpenDuration(300)
+                    .CloseDuration(300)
+        )
+        .Content(@<text>
+    <script type="text/javascript">
+        function onMessageBoxCloseUploadImage() {
+            $('#CreateCustomer').data('tWindow').center().close();
+        }
+    </script>
+    @Html.Action("CreateCustomer", "Home")
+    </text>)
+        .Render();
+}
+@{ Html.Telerik().Window()
+        .Name("SaveComplete")
+        .Title("Đặt hàng thành công")
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Width(550)
+        .Height(180)
+        .Effects(fx => fx
+                    .Zoom()
+                    .Opacity()
+                    .OpenDuration(300)
+                    .CloseDuration(300)
+        )
+        .Content(@<text>
+    <script type="text/javascript">
+        function onMessageBoxCloseSaveComplete() {
+            window.location.href = "@Url.Action("CreateOrder", "Home")";
+        }
+    </script>
+    <div style="text-align: center">
+        <p style="font-weight:bold; font-size:20px;">Đơn hàng đã được đặt và duyệt thành công,
+            <br />
+            Nội dung đã được sao lưu vào email của bạn.
+            <br />
+            Xin cảm ơn!
+        </p>
+    </div>
+    <table style="width: 50%;">
+        <tr>
+            <td>
+                <div class="form-actions" style="margin-left: 55px">
+                    <input type="button" onclick="onMessageBoxCloseSaveComplete();" style="height: 25px; width: 50px" class="t-button t-state-default" value="OK" />
+                </div>
+            </td>
+        </tr>
+    </table>
+    </text>)
+        .Render();
+}

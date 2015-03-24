@@ -1,0 +1,43 @@
+﻿@model WeddingInvitation.Core.Models.ContentManagement.StaticPage
+@{
+    ViewBag.Title = "Liên hệ";
+}
+<div class="error">
+    <div id="system-message-container">
+        <dl id="system-message">
+            <dd class="error message">
+                @Html.ValidationSummary(true)
+            </dd>
+         </dl>
+    </div>
+</div>
+<span style="color:#8b8b8b;font-size:24px;border-bottom:1px solid #CCC;line-height:32px;">Liên Hệ</span>
+<br />
+<br>
+<div class="right" id="sidebar-2">
+    <div class="moduletable">
+        <div class="custom">
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+</div>
+<div class="contact">
+    <div class="contact-form">
+        @using (Html.BeginForm("HelpAndSupport", "Home", FormMethod.Post))
+        {
+		    <fieldset>
+			    <dl>
+				    <dt><label title="" class="hasTip required" for="jform_contact_name" id="jform_contact_name-lbl">Tên<span class="star">&nbsp;*</span></label></dt>
+				    <dd><input type="text" size="30" class="required" value="" id="Name" name="Name" aria-required="true" required="required"></dd>
+				    <dt><label title="" class="hasTip required" for="jform_contact_email" id="jform_contact_email-lbl">Email<span class="star">&nbsp;*</span></label></dt>
+				    <dd><input type="email" size="30" value="" id="Email" class="validate-email required" name="Email" aria-required="true" required="required"></dd>
+				    <dt><label title="" class="hasTip required" for="jform_contact_emailmsg" id="jform_contact_emailmsg-lbl">Tiêu đề<span class="star">&nbsp;*</span></label></dt>
+				    <dd><input type="text" size="60" class="required" value="" id="Subject" name="Subject" aria-required="true" required="required"></dd>
+				    <dt><label title="" class="hasTip required" for="jform_contact_message" id="jform_contact_message-lbl">Nội dung<span class="star">&nbsp;*</span></label></dt>
+				    <dd><textarea class="required" rows="10" cols="50" id="Message" name="Message" aria-required="true" required="required"></textarea></dd>	                    			                         			                    			               			          			     				    <dt></dt>
+				    <dd><button type="submit" class="button validate">Gửi Email</button></dd>
+			    </dl>
+		    </fieldset>
+        }
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.StateProvinceModel
+@using (Html.BeginForm("Save", "StateProvince", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.StateProvinceId > 0 ? "Sửa tỉnh thành" : "Tạo mới tỉnh thành")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.StateProvinceId)
+    <table width="99%">
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MyOfficeId, new SelectList(Model.Offices, "MyOfficeId", "OfficeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.MyOfficeId, "Chi nhánh là bắt buộc chọn.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên tỉnh thành")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.StateProvinceName)
+                @Html.ValidationMessageFor(model => model.StateProvinceName)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Mã tỉnh thành")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.StateProvinceCode)
+                @Html.ValidationMessageFor(model => model.StateProvinceCode)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Chi nhánh thuộc tỉnh này")
+            </td>
+            <td align="left">
+                @Html.CheckBoxFor(model => model.IsMain)
+            </td>
+        </tr>
+    </table>
+}

@@ -1,0 +1,163 @@
+﻿@model WeddingInvitation.Models.AccountDetailsModel
+@{
+    ViewBag.Title = "Signup";
+}
+<script type="text/javascript">
+    //Redicrect to list package
+    function RedirectToIndex() {
+        window.location.href="@Url.Action("Logon", "Account")";
+    }
+    $(function () {
+        $("#txtCompanyName").autocomplete({
+            source: function (request, response) {
+                // define a function to call your Action (assuming AccountController)
+                $.ajax({
+                    url: '@Url.Action("GetAvailableCompanies", "Account")',
+                    type: "POST",
+                    dataType: "json",
+                    // query will be the param used by your action method
+                    data: { query: request.term },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return { label: item, value: item };
+                        }));
+                    }
+                });
+            }
+        });
+    });
+</script>
+<div class="bg_wireless">
+    <div class="site">
+        Sign Up</div>
+</div>
+@using (Html.BeginForm("Signup", "Account", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.UserId)
+    @Html.ValidationSummary(true)
+    <div class="main_content edit_user">
+        <div class="list-content">
+            <article class="group non-bottom">
+                <header class="title sharing">
+                    <strong>1. Account Details</strong>
+                </header>
+                <dl class="edit_item">
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Company Name</label>
+                        @Html.TextBoxFor(model => model.CompanyName, new { @class = "textbox", @id = "txtCompanyName" })
+                        @Html.ValidationMessageFor(model => model.CompanyName)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Contact Number</label>
+                        @Html.TextBoxFor(model => model.ContactNumber, new { @class = "textbox", @onkeypress = "return PreventKeyIsNotNumberic(event)" })
+                        @Html.ValidationMessageFor(model => model.ContactNumber)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Address 1</label>
+                        @Html.TextBoxFor(model => model.Address1, new { @class = "textbox" })
+                        @Html.ValidationMessageFor(model => model.Address1)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Address 2</label>
+                        @Html.TextBoxFor(model => model.Address2, new { @class = "textbox" })
+                        @Html.ValidationMessageFor(model => model.Address2)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Town / City</label>
+                        @Html.TextBoxFor(model => model.TownCity, new { @class = "textbox" })
+                        @Html.ValidationMessageFor(model => model.TownCity)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Post Code / ZIP</label>
+                        @Html.TextBoxFor(model => model.PostCodeZip, new { @class = "textbox short" })
+                        @Html.ValidationMessageFor(model => model.PostCodeZip)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Country / Region</label>
+                        @Html.DropDownListFor(model => model.CountryRegion, (IEnumerable<SelectListItem>)ViewBag.ListCountry, new { @class = "select", @title = "Choose Country" })
+                    </dt>
+                </dl>
+            </article>
+            <article class="group non-bottom" style="margin-top: 0pt;">
+                <header class="title sharing">
+                    <strong>2. User Details</strong>
+                </header>
+                <dl class="edit_item">
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Contact Name</label>
+                        @Html.TextBoxFor(model => model.ContactName, new { @class = "textbox" })
+                        @Html.ValidationMessageFor(model => model.ContactName)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Email Address</label>
+                        @Html.TextBoxFor(model => model.EmailAddress, new { @class = "textbox" })
+                        @Html.ValidationMessageFor(model => model.EmailAddress)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Password</label>
+                        @Html.PasswordFor(model => model.Password, new { @class = "textbox", @Value = Model.Password })
+                        @Html.ValidationMessageFor(model => model.Password)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            Confirm Password</label>
+                        @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "textbox", @Value = Model.ConfirmPassword })
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                    </dt>
+                    <dt class="list_item">
+                        <label class="label labeltxt">
+                            &nbsp;</label>
+                        @if (Model.UserId != 0)
+                        {
+                            <input type="submit" class="submit_save align-left" value="" />
+                        }
+                        else
+                        {
+                            <input type="submit" value="Add" class="submit_Add align-left"/>
+                        }
+                        <input type="button" onclick="return RedirectToIndex()" value="Cancel" class="cancel align-left" />
+                    </dt>
+                </dl>
+            </article>
+        </div>
+    </div>
+}
+<div class="userdetail">
+    <div id="userdetail">
+        <h1>
+            New account</h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br>
+            <br>
+            Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum
+            soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat
+            facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.<br>
+            <br>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
+            laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+            architecto beatae vitae dicta sunt explicabo.
+            <br>
+            <br>
+        </p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //Set default null for Username and Password
+    $(document).ready(function () {
+        $("#EmailAddress").val("");
+        $("#Password").val("");
+    })
+</script>

@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Danh sách tỉnh thành";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#StateProvince"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách tỉnh thành
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create", "StateProvince")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "StateProvince", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid<WeddingInvitation.Areas.Administrator.Models.StateProvinceModel>(new List<WeddingInvitation.Areas.Administrator.Models.StateProvinceModel>(), name: "StateProvince", controllerName: "StateProvince")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.StateProvinceId).Title("ID").ClientTemplate("<a href=\"StateProvince/Edit/<#= StateProvinceId #>\"><#= 10000 + StateProvinceId #></a>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.StateProvinceName).Title("Tên Tỉnh Thành")
+                            .Filterable(false);
+                        columns.Bound(x => x.StateProvinceCode).Title("Mã Tỉnh Thành")
+                            .Width(200)
+                            .Filterable(false);
+                        columns.Bound(x => x.RegionName).Title("Chi nhánh")
+                            .Width(200)
+                            .Filterable(true);
+                        columns.Bound(p => p.StateProvinceId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= StateProvinceId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                            .Width(100).Sortable(false)
+                            .Filterable(false);
+                    }))

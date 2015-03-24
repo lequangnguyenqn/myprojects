@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingInvitation", "WeddingInvitation\WeddingInvitation.csproj", "{131E4C81-8F3D-4A5B-B009-025B97841750}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingInvitation.Infrastructure", "WeddingInvitation.Infrastructure\WeddingInvitation.Infrastructure.csproj", "{5722B5AB-97E6-4EB1-83B5-6550FBD91896}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingInvitation.Core", "WeddingInvitation.Core\WeddingInvitation.Core.csproj", "{782124D9-3DAC-403D-89E0-40B148952870}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingInvitation.Data", "WeddingInvitation.Data\WeddingInvitation.Data.csproj", "{324CCADB-E23E-43E5-BA96-B7F30DE07B0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeddingInvitation.Services", "WeddingInvitation.Services\WeddingInvitation.Services.csproj", "{08040541-74A2-4B8A-B045-21E7E15AA54A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{131E4C81-8F3D-4A5B-B009-025B97841750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{131E4C81-8F3D-4A5B-B009-025B97841750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{131E4C81-8F3D-4A5B-B009-025B97841750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{131E4C81-8F3D-4A5B-B009-025B97841750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5722B5AB-97E6-4EB1-83B5-6550FBD91896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5722B5AB-97E6-4EB1-83B5-6550FBD91896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5722B5AB-97E6-4EB1-83B5-6550FBD91896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5722B5AB-97E6-4EB1-83B5-6550FBD91896}.Release|Any CPU.Build.0 = Release|Any CPU
+		{782124D9-3DAC-403D-89E0-40B148952870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{782124D9-3DAC-403D-89E0-40B148952870}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{782124D9-3DAC-403D-89E0-40B148952870}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{782124D9-3DAC-403D-89E0-40B148952870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{324CCADB-E23E-43E5-BA96-B7F30DE07B0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{324CCADB-E23E-43E5-BA96-B7F30DE07B0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{324CCADB-E23E-43E5-BA96-B7F30DE07B0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{324CCADB-E23E-43E5-BA96-B7F30DE07B0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08040541-74A2-4B8A-B045-21E7E15AA54A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08040541-74A2-4B8A-B045-21E7E15AA54A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08040541-74A2-4B8A-B045-21E7E15AA54A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08040541-74A2-4B8A-B045-21E7E15AA54A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

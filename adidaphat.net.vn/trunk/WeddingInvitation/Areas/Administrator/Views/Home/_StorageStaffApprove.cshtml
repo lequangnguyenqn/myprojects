@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Bộ phận kho xác nhận nhập kho";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#ImportTrack1"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Xác nhận nhập kho
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch", showFromSearch: false)
+@*@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn thực hiện thao tác này!", @Url.Action("StorageStaffApproveDone", "ImportTrack", new { area = "administrator" })).ToHtmlString())*@
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.ImportTrackModel>(), name: "ImportTrack1", action: "StorageStaffApproveGridModel", controllerName: "ImportTrack", routeValues: null)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ImportTrackId).Title("ID").ClientTemplate("<label><#= 10000 + ImportTrackId #></label>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.CreateDate).Title("Ngày Nhập").Format("{0:dd/MM/yyyy}")
+                            .Width(250)
+                            .Filterable(false);
+                        //columns.Bound(x => x.ImportUserName).Title("Nhân Viên Nhập")
+                        //    .Filterable(false);
+                        //columns.Bound(p => p.ImportTrackId)
+                        //    .ClientTemplate("<a onclick='onMessageBoxDetail(<#= ImportTrackId #>)'>Chi tiết</a>")
+                        //    .HtmlAttributes(new { style = "text-align:center" })
+                        //    .Title("")
+                        //    .Width(50).Sortable(false)
+                        //    .Filterable(false);
+                        //columns.Bound(p => p.ImportTrackId)
+                        //    .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= ImportTrackId #>)'>Xác nhận</a>")
+                        //    .HtmlAttributes(new { style = "text-align:center" })
+                        //    .Title("")
+                        //    .Width(100).Sortable(false)
+                        //    .Filterable(false);
+                        //columns.Bound(p => p.ImportTrackId)
+                        //    .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= ImportTrackId #>, <#= StorageId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                        //    .HtmlAttributes(new { style = "text-align:center" })
+                        //    .Title(string.Empty)
+                        //    .Width(100).Sortable(false)
+                        //    .Filterable(false);
+                    }).Scrollable(scrolling => scrolling.Height(100)))
+@*@{ Html.Telerik().Window()
+        .Name("ImportDetails")
+        .Title("Chi tiết nhập kho")
+        .Draggable(true)
+        .Visible(false)
+        .Modal(true)
+        .Width(870)
+        .Height(260)
+        .Render();
+}
+<script type="text/javascript">
+    function onMessageBoxDetail(id) {
+        var window = $("#ImportDetails").data("tWindow");
+        window.ajaxRequest($.validator.format("{0}/{1}", "@Url.Action("ListImportDetail", "ImportTrack")", id || ""));
+        window.center().open();
+    }
+</script>*@

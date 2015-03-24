@@ -1,0 +1,187 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.OrderModel
+@using WeddingInvitation.Data
+@using WeddingInvitation.Infrastructure.Security;
+@using WeddingInvitation.Infrastructure;
+@{
+    ViewBag.Title = "Báo cáo số lượng sản phẩm bán ra";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#Order"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Báo cáo số lượng sản phẩm bán ra
+    </div>
+    <div class="options">
+        <a onclick="Preview();" class="t-button">Xem</a>
+    </div>
+</div>
+<table width="90%">
+    <tr>
+        <td>
+            @Html.Label("Từ ngày")
+        </td>
+        <td>
+            @Html.Label("Đến ngày")
+        </td>
+        <td>
+            @Html.Label("Chi nhánh")
+        </td>
+        <td>
+            @Html.Label("Khách hàng")
+        </td>
+        <td>
+            @Html.Label("Sản phẩm")
+        </td>
+        <td>
+            @Html.CheckBox("PrintingWithoutImage")
+            <b>@Html.Label("In không hình")</b>
+        </td>
+        <td>
+            @Html.CheckBox("PrintingIncludeImage")
+            <b>@Html.Label("In có hình")</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @(Html.Telerik().DatePicker()
+                    .Name("FromDate")
+                    .HtmlAttributes(new { id = "FromDate_wrapper" })
+                    .ShowButton(true)
+                    .Value(DateTime.Now)
+            )
+        </td>
+        <td>
+            @(Html.Telerik().DatePicker()
+                    .Name("ToDate")
+                    .HtmlAttributes(new { id = "ToDate_wrapper" })
+                    .ShowButton(true)
+                    .Value(DateTime.Now)
+            )
+        </td>
+        <td>
+            @Html.DropDownList("MyOffice", new SelectList(Model.MyOffices, "MyOfficeId", "OfficeName"))
+        </td>
+        <td>
+            @Html.DropDownList("ListCustomers", new SelectList(Model.Customers, "CustomerId", "CustomerName"))
+        </td>
+        <td>
+            @Html.DropDownList("ListProducts", new SelectList(Model.Products, "ProductId", "ProductName"))
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+    </tr>
+</table>
+<br />
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch", showFromSearch:false)
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có muốn thực hiện thao tác này?", @Url.Action("CanelOrderDone", "Order", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.ProductInStorageModel>(), name: "Order", controllerName: "Reporting", action: "SaleGridModel", routeValues: null)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                            .Width(250)
+                            .Filterable(false);
+                        columns.Bound(x => x.OfficeName).Title("Chi nhánh")
+                            .Filterable(false);
+                        columns.Bound(x => x.Amount).Title("Số Lượng")
+                            .Format("{0:n0}")
+                            .Aggregate(aggreages => aggreages.Sum())
+                            .ClientGroupFooterTemplate("Tổng: <#= $.telerik.formatString('{0:n0}', Sum) #>")
+                            .Filterable(false);
+                    }).Localizable("vi-VN")
+                    .Pageable(paging => paging.Enabled(false))
+                    .Scrollable(scrolling => scrolling.Enabled(false))
+                    .Groupable(grouping => grouping.Groups(groups => 
+                    {
+                        groups.Add(c => c.OfficeName);
+                    }).Visible(false)).ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                    .EnableCustomBinding(true))
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MyOffice").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#MyOffice").multiselect("uncheckAll");
+        $("#ListCustomers").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#ListCustomers").multiselect("uncheckAll");
+        $("#ListProducts").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        $("#ListProducts").multiselect("uncheckAll");
+        jQuery.validator.methods["date"] = function (value, element) { return true; };
+    });
+    function Preview() {
+        var fromDateTime = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', fromDateTime.value());
+        var toDateTime = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', toDateTime.value());
+        var offices = $("#MyOffice").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var products = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var listCustomers = $("#ListCustomers").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        jQuery.ajaxSettings.traditional = true;
+        $("#Order").data('tGrid')
+                         .rebind({
+                             FromDate: fromDate,
+                             ToDate: toDate,
+                             ListOffices: offices,
+                             ListProducts: products,
+                             ListCustomers: listCustomers,
+                             PrintingIncludeImage: $("#PrintingIncludeImage").is(':checked'),
+                             PrintingWithoutImage: $("#PrintingWithoutImage").is(':checked'),
+                         });
+
+    }
+    function onDataBinding(e) {
+        var fromDateTime = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', fromDateTime.value());
+        var toDateTime = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', toDateTime.value());
+        var offices = $("#MyOffice").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var products = $("#ListProducts").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var listCustomers = $("#ListCustomers").multiselect("getChecked").map(function () {
+            return this.value;
+        }).get();
+        var searchModel = {
+            FromDate: fromDate,
+            ToDate: toDate,
+            ListOffices: offices,
+            ListProducts: products,
+            ListCustomers: listCustomers,
+            PrintingIncludeImage: $("#PrintingIncludeImage").is(':checked'),
+            PrintingWithoutImage: $("#PrintingWithoutImage").is(':checked'),
+        };
+        e.data = searchModel;
+    }
+</script>
