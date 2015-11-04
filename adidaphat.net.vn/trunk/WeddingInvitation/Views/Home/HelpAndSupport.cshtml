@@ -1,0 +1,65 @@
+﻿@model WeddingInvitation.Models.HelpAndSupportModel
+@{
+    ViewBag.Title = "Help & Support";
+}
+<style type="text/css">
+  span.select {
+    width: 380px;
+    }
+ </style>
+@using (Html.BeginForm("HelpAndSupport", "Home", FormMethod.Post))
+{
+    <div class="bg_wireless">
+        <div class="site"> Help & Support </div>
+    </div>
+    <div class="main_content account_detail" style="font-family: CartoGothic Std;">
+        <div class="edit_item group_account">
+            <div class="list_item" style="line-height:1.54">
+                <label class="label labeltxt">
+                    &nbsp;
+                </label>
+                <p style="color:#0380a5;font-size:20px;">Have a question or query about M-VATE?</p>
+                <p style="padding-left:120px;padding-right:100px">Please create a support ticket below, or alternatively you can contact our Support Team by email.</p>
+            </div>
+            <br />
+            <br />
+            <div class="list_item">
+                <label style="line-height:15px;" class="label labeltxt">What do you need help with</label>
+                @Html.DropDownListFor(model => model.TopicId, (IEnumerable<SelectListItem>)ViewBag.ListTopic, new { @class = "select", @title = "Please select", @style = "width:385px;" })
+                @Html.ValidationMessageFor(model => model.TopicId)
+            </div>
+            <div style="min-height: 32px; margin-left: 33px;">
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">Message</label>
+                @Html.TextAreaFor(model => model.Message, new { @class = "textbox", @rows = 10, @style = "width:360px;line-height:18px;height:150px;" })
+                @Html.ValidationMessageFor(model => model.Message)
+            </div>
+            <div style="padding-left:45px;padding-top:15px">
+                <label class="label labeltxt">
+                    &nbsp;
+                </label>
+                @Html.ValidationSummary(true)
+            <input type="submit" value="Submit" class="password align-left">
+            @if (TempData["MessageSuccess"] != null)
+            {
+                <p style="padding-top: 28px;color:Green;">&nbsp;&nbsp; @TempData["MessageSuccess"]</p>
+            }
+        </div>
+        </div>
+    </div>
+    <div class="userdetail">
+        <div id="userdetail">
+            <h1>
+                Contact Support
+            </h1>
+            <p style="line-height:1.54;">
+                EMAIL:
+                <br />
+                support@WeddingInvitation.com
+                <br />
+                <br />
+            </p>
+        </div>
+    </div>
+}

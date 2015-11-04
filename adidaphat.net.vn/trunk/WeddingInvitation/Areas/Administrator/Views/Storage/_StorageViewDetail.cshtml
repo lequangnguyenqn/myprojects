@@ -1,0 +1,36 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.StorageModel
+@using (Html.BeginForm("Save", "Storage", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.StorageId > 0 ? "Sửa kho" : "Tạo mới kho")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.StorageId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên kho")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.StorageName)
+                @Html.ValidationMessageFor(model => model.StorageName)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Desciption, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Desciption)
+            </td>
+        </tr>
+    </table>
+}

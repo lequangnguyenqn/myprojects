@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Danh sách tin tức";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#News"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách tin tức
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create", "News")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "News", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.NewsItemModel>(), name: "News", controllerName: "News")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.NewsItemId).Title("ID").ClientTemplate("<a href=\"News/Edit/<#= NewsItemId #>\"><#= 10000 + NewsItemId #></a>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.Title).Title("Tiêu đề")
+                            .Filterable(false);
+                        columns.Bound(x => x.NewsCategoryItemName).Title("Danh mục")
+                            .Width(200)
+                            .Filterable(true);
+                        columns.Bound(x => x.CreateDate).Title("Tạo Ngày").Format("{0:dd/MM/yyyy}")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(p => p.NewsItemId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= NewsItemId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                            .Width(100).Sortable(false)
+                            .Filterable(false);
+                    }).Sortable(p => p.OrderBy(o => o.Add(b => b.NewsItemId).Descending())))

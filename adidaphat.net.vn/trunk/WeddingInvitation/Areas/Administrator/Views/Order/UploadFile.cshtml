@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Cập nhật File Hoặc Duyệt In";
+    Layout = "~/Areas/Administrator/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#Order"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Cập nhật File Hoặc Duyệt In
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "Order", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.OrderModel>(), name: "Order", action: "UploadFileGridModel", controllerName: "Order", routeValues: null)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.OrderId).Title("ID").ClientTemplate("<label><#= 10000 + OrderId #></label>")
+                            .Width(100)
+                            .Filterable(false);
+                            columns.Bound(x => x.MyOfficeIName).Title("Chi Nhánh")
+                            .Width(250)
+                            .Filterable(false);
+                            columns.Bound(x => x.ShippingServiceName).Title("Chành Xe")
+                                    .Filterable(false);
+                            columns.Bound(x => x.CustomerName).Title("Khách Hàng")
+                                .Filterable(false);
+                            columns.Bound(x => x.CustomerPhone).Title("Điện Thoại")
+                                .Width(150)
+                            .Filterable(false);
+                        columns.Bound(x => x.CreateDate).Title("Ngày Tạo").Format("{0:dd/MM/yyyy HH:mm}")
+                            .Width(150)
+                            .Filterable(false);
+                        columns.Bound(x => x.TotalCostDisplay).Title("Tổng Tiền")
+                            .Width(150)
+                            .Filterable(false);
+                        columns.Bound(x => x.OrderId).Title("").ClientTemplate("<a href=\"" + Url.Action("Edit", "Order") + "/<#= OrderId #>?backId=1\">Cập nhật file</a>")
+                            .Width(100)
+                            .Sortable(false)
+                            .Filterable(false);
+                        columns.Bound(p => p.OrderId)
+                          .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= OrderId #>)'><img src=\"" + Url.Content("~/Content/Images/delete_16_16.png") + "\" /></a>")
+                          .HtmlAttributes(new { style = "text-align:center" })
+                          .HeaderHtmlAttributes(new { style = "text-align:center" })
+                          .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                          .Width(50).Sortable(false)
+                          .Filterable(false);
+                    }).Sortable(p => p.SortMode(GridSortMode.MultipleColumn).OrderBy(o =>
+                    {
+                        o.Add(b => b.ShowOnTop).Descending();
+                        o.Add(t => t.OrderId);
+                    })))

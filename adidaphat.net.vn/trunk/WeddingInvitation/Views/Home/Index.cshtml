@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+<link rel="stylesheet" href="@Url.Content("~/Content/nivo-slider-enhanced.css")" type="text/css">
+<script src="@Url.Content("~/Scripts/Views/Shared/caption.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Views/Shared/jquery_003.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Views/Shared/jquery_002.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    window.addEvent('load', function () {
+        new JCaption('img.caption');
+    });
+    window.addEvent('domready', function () {
+        $$('.hasTip').each(function (el) {
+            var title = el.get('title');
+            if (title) {
+                var parts = title.split('::', 2);
+                el.store('tip:title', parts[0]);
+                el.store('tip:text', parts[1]);
+            }
+        });
+        var JTooltips = new Tips($$('.hasTip'), { maxTitleChars: 50, fixed: false });
+    });
+
+    jQuery.noConflict();
+    (function ($) {
+        $(window).load(function () {
+            $('.NivoSzakiSlider .nivoSlider').nivoSlider({
+                effect: 'random',
+                slices: 15,
+                animSpeed: 500,
+                pauseTime: 6000,
+                startSlide: 0,
+                directionNav: 1,
+                directionNavHide: 0,
+                controlNav: 0,
+                controlNavThumbs: 0,
+                controlNavThumbsFromRel: false,
+                controlNavThumbsSearch: '.jpg',
+                controlNavThumbsReplace: '_thumb.jpg',
+                keyboardNav: 0,
+                pauseOnHover: 1,
+                manualAdvance: 0,
+                captionOpacity: 1
+            });
+        });
+    })(jQuery);
+
+    window.addEvent('domready', function () { new DropdownMaxiMenu(document.getElement('div#maximenuCK'), { mooTransition: 'Quad', mooEase: 'easeOut', useOpacity: '0', dureeOut: 500, menuID: 'maximenuCK', testoverflow: '0', orientation: '0', mooDuree: 500 }); });
+    //function keepAlive() { var myAjax = new Request({ method: "get", url: "index.php" }).send(); } window.addEvent("domready", function () { keepAlive.periodical(840000); });
+  </script>
+
+
+<div class="moduletable">
+					<div class="NivoSzakiSlider"><div class="nivoSlider" style="background: url(&quot;@Url.Content("~/Content/images/slide5.jpg")&quot;) no-repeat scroll 0% 0% transparent;">
+<a href="#" class="nivo-imageLink" style="display: none;"><img src="@Url.Content("~/Content/images/slide1.jpg")" alt="" title="" style="display: none;"></a>
+<a href="#" class="nivo-imageLink" style="display: none;"><img src="@Url.Content("~/Content/images/slide2.jpg")" alt="" title="" style="display: none;"></a>
+<a href="#" class="nivo-imageLink" style="display: none;"><img src="@Url.Content("~/Content/images/slide3.jpg")" alt="" title="" style="display: none;"></a>
+<a href="#" class="nivo-imageLink" style="display: none;"><img src="@Url.Content("~/Content/images/slide4.jpg")" alt="" title="" style="display: none;"></a>
+<a href="#" class="nivo-imageLink" style="display: block;"><img src="@Url.Content("~/Content/images/slide5.jpg")" alt="" title="" style="display: none;"></a>
+</div></div>		</div>
+
+<div class="wrapper blocks">
+    <div class="moduletable-solutions">
+        <div style="padding-bottom:10px;">
+            <span style="color:#7A7A7A;font-size:24px;line-height:32px;">Định vị bưu phẩm</span>
+        </div>
+        @using (Html.BeginForm("Index", "Tracking", FormMethod.Get))
+        {
+            <textarea required="required" placeholder="Quý khách nhập số vận đơn trên phiếu gửi để tra bưu phẩm, bưu kiện" aria-required="true" name="TrackingNumbers" id="TrackingNumbers" style="height:54px;width:265px;"></textarea>
+            <div style="float:right;padding:3px;"><button class="button validate" type="submit">Tra cứu</button></div>    
+        }
+        <div style="clear: both;"></div>
+        <div style="border-bottom:1px solid #E3E3E3;text-align:center;padding:5px;">
+            <span style="color: #7A7A7A; font-weight: bold;">
+                Hỗ trợ trực tuyến
+            </span>
+        </div>
+        <div class="bg_icon_support">
+            <div class="bg_yahoo">
+                <div style="color: #7A7A7A;font-weight: bold;margin-bottom: 6px;text-align:center;padding-left:15px;">Yahoo</div>
+                <div><span style="color: #7A7A7A;padding-right:8px;">Hà Nội</span><a href="ymsgr:sendIM?hn.trungthanhexpress" style="padding-left:10px"><img border="0" alt="" src="http://opi.yahoo.com/online?u=hn.trungthanhexpress&amp;m=g&amp;t=1"></a></div> 
+                <div><span style="color: #7A7A7A;">TP.HCM</span><a href="ymsgr:sendIM?hcm.trungthanhexpress" style="padding-left:10px"><img border="0" alt="" src="http://opi.yahoo.com/online?u=hcm.trungthanhexpress&amp;m=g&amp;t=1"></a></div>         
+            </div>
+            <div class="bg_skype">
+                <div style="color: #7A7A7A;font-weight: bold;margin-bottom: 5px;text-align:center;padding-left:20px;">Skype</div>
+                <div style="margin-left:24px;"><a href="skype:trungthanh.express.hn?chat"><img width="80" height="17" alt="" style="border: none;" src="http://mystatus.skype.com/smallclassic/trungthanh.express.hn"></a></div>
+                <div style="margin-left:24px;"><a href="skype:trungthanh.express.hcm?chat"><img width="80" height="17" alt="" style="border: none;" src="http://mystatus.skype.com/smallclassic/trungthanh.express.hcm"></a></div>
+            </div>        
+        
+        </div>
+	</div>
+	<div class="moduletable-opportunities">
+		<div>
+            <span style="color:#7A7A7A;font-size:24px;line-height:32px;">Tin mới</span>
+        </div>
+        <!-- START 'DisplayNews by BK 2.0RC1' -->
+        <ul class="menu-serviceslist">
+            @foreach (var item in (List<WeddingInvitation.Core.Models.ContentManagement.NewsItem>)ViewBag.ListNews)
+            {
+                <li class="item-628"><a href="@Url.Action("", "News", new { id = item.NewsItemId })">@(item.Title.Length > 34 ? (item.Title.Substring(0, 34) + "...") : item.Title)</a></li>
+            }
+         </ul>
+        <!-- END 'DisplayNews by BK 2.0RC1' -->
+    </div>
+	<div class="moduletable-services">
+		<div style="padding-bottom:10px;">
+            <span style="color:#7A7A7A;font-size:24px;line-height:32px;">Khách hàng tiêu biểu</span>
+        </div>
+        <!-- START 'DisplayNews by BK 2.0RC1' -->
+        <div class="customerlogos">
+            <ul>
+                @foreach (var item in (List<WeddingInvitation.Core.Models.Customers.CustomerLogo>)ViewBag.CustomerLogos)
+                {
+                    <li><div style="float:left;padding:5px;"><a href="@(string.IsNullOrEmpty(item.HomePageUrl) ? "#": item.HomePageUrl)"><img src="@Url.Content("~" + item.LogoUrl)" alt="" width="100" height="50" ></a></div><div style="text-align:center;padding-top:25px;"><a href="@(string.IsNullOrEmpty(item.HomePageUrl) ? "#": item.HomePageUrl)" style="text-decoration:none;color:#7A7A7A;">@item.CustomerName</a></div></li>
+                }
+            </ul>
+        </div>
+        <!-- END 'DisplayNews by BK 2.0RC1' -->
+	</div>
+	
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".customerlogos").jCarouselLite({
+            vertical: true,
+            auto: 800,
+            speed: 1000,
+            visible: 1
+        });
+
+        $(".customerlogos").height(192);
+    });
+</script>

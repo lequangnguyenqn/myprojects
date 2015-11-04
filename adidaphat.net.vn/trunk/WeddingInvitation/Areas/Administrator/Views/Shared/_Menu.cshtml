@@ -1,0 +1,38 @@
+﻿@using Telerik.Web.Mvc.UI;
+@using WeddingInvitation.Infrastructure.Security;
+@using WeddingInvitation.Infrastructure.Unity;
+@using Microsoft.Practices.Unity;
+@{
+    //permission service
+    var permissionService = MvcUnityContainer.Container.Resolve<IPermissionService>();
+    if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
+    {
+        Telerik.Web.Mvc.SiteMapManager.SiteMaps.Register<Telerik.Web.Mvc.XmlSiteMap>("admin", sitemap =>
+            sitemap.LoadFrom("~/Areas/Administrator/sitemap.xml"));
+    }
+    Html.Telerik().Menu()
+        .Name("adminMenu")
+        .BindTo("admin", (menuItem, siteMapNode) =>
+        {
+            //System.Diagnostics.Debug.Write(((Telerik.Web.Mvc.SiteMapNode)siteMapNode).Attributes["resourceKey"]);   
+            var imageUrl = siteMapNode.Attributes["ImageUrl"];
+            if (imageUrl != null && !string.IsNullOrEmpty(imageUrl.ToString()))
+            {
+                menuItem.ImageUrl = imageUrl.ToString();
+            }
+            var title = siteMapNode.Attributes["title"];
+            if (title != null && !string.IsNullOrEmpty(title.ToString()))
+            {
+                menuItem.Text = title.ToString();
+            }
+
+            var permissionNames = siteMapNode.Attributes["PermissionNames"];
+            if (permissionNames != null && !string.IsNullOrEmpty(permissionNames.ToString()))
+            {
+                menuItem.Visible = permissionNames.ToString().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
+            } 
+        })
+        .OpenOnClick(false)
+        .Render();
+}

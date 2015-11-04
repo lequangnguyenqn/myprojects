@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap>
+  <siteMapNode title="Home" resourceKey="txtHome">
+    <siteMapNode title="Trang Chức Năng" resourceKey="txtDashboard" controller="Home" action="index" ImageUrl="~/Areas/Administrator/Content/images/ico-dashboard.png" />
+    <siteMapNode title="Bưu Phẩm Và Định Vị" resourceKey="txtParcelsTracking" ImageUrl="~/Areas/Administrator/Content/images/ico-sales.png" >
+      <siteMapNode title="Quản Lý Bưu Phẩm" resourceKey="txtParcel" controller="Parcel" action="index" />
+      <siteMapNode title="Định Vị Bưu Phẩm" resourceKey="txtTracking" controller="Tracking" action="index" />
+      <siteMapNode title="B.Kê Bưu Phẩm - Hàng Hóa" resourceKey="txtParcelReporting" controller="Reporting" action="ParcelReporting" />
+      <siteMapNode title="B.Kê Nợ Chi Tiết" resourceKey="txtParcelCustomerReporting" controller="Reporting" action="ParcelCustomerReporting" />
+    </siteMapNode>
+    <siteMapNode title="Khách Hàng" resourceKey="txtSales" ImageUrl="~/Areas/Administrator/Content/images/User group.png" >
+      <siteMapNode title="Quản Lý Khách Hàng" resourceKey="txtCustomer" controller="Customer" action="index"/>
+    </siteMapNode>
+    <siteMapNode title="Nhân Viên" resourceKey="txtPromotion" ImageUrl="~/Areas/Administrator/Content/images/ico-customers.png" >
+      <siteMapNode title="Quản Lý Nhân Viên" resourceKey="txtEmployee" controller="User" action="Index"/>
+    </siteMapNode>
+    <siteMapNode title="Thiết Lập" resourceKey="txtSettings" ImageUrl="~/Areas/Administrator/Content/images/ico-configuration.png" >
+      <siteMapNode title="Chi Nhánh" resourceKey="txtOffice"  controller="MyOffice" action="index">
+      </siteMapNode>
+      <siteMapNode title="Bảng Giá" resourceKey="txtRatesTable"  controller="RatesTable" action="index">
+      </siteMapNode>
+      <!--<siteMapNode title="Văn Phòng" resourceKey="txtMyOffice"  controller="MyOffice" action="index">
+      </siteMapNode>-->
+      <siteMapNode title="Vùng Miền" resourceKey="txtRegion"  controller="Region" action="index">
+      </siteMapNode>
+      <siteMapNode title="Tỉnh Thành" resourceKey="txtStateProvince"  controller="StateProvince" action="index">
+      </siteMapNode>
+      <siteMapNode title="Bưu Cục" resourceKey="txtPostOffice"  controller="PostOffice" action="index">
+      </siteMapNode>
+      <siteMapNode title="Định Giá" resourceKey="txtRateMapping"  controller="RateMapping" action="index">
+      </siteMapNode>
+    </siteMapNode>
+    <siteMapNode title="Quản Trị Nội Dung" resourceKey="txtCatalog" ImageUrl="~/Areas/Administrator/Content/images/ico-catalog.png" >
+      <!--<siteMapNode title="Quản Lý Danh Mục" resourceKey="txtManageCategories" controller="NewsCategory" action="index"/>-->
+      <siteMapNode title="Quản Lý Tin Tức" resourceKey="txtNews" controller="News" action="Index"/>
+      <siteMapNode title="Các Trang Trang Tĩnh" resourceKey="txtStaticPages" controller="StaticPage" action="index"/>
+      <siteMapNode title="Logo khách hàng" resourceKey="txtCustomerLogo" controller="CustomerLogo" action="index"/>
+    </siteMapNode>
+  </siteMapNode>
+</siteMap>
+

@@ -1,0 +1,103 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.OrderDeliveryPackageModel
+@{
+    ViewBag.Title = "Chuyển hàng cho chi nhánh tỉnh";
+    Layout = "~/Areas/Administrator/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("SaveDeliveryPackage", "Order", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            Chuyển hàng cho chi nhánh tỉnh
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("Delivery", "Order")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.OrderDeliveryPackageId)
+    @Html.HiddenFor(model => model.Orders)
+    @Html.HiddenFor(model => model.MyOfficeId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Nhân viên giao hàng tỉnh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DeliveryUserId, new SelectList(Model.Users, "UserId", "FullName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.DeliveryUserId, "Nhân viên giao hàng tỉnh là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Phí chuyển phát")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ShippingFeeId, new SelectList(Model.ShippingFees, "ShippingFeeId", "ShippingFeeName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.ShippingFeeId, "Phí chuyển phát là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Giá cước")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.ShippingFee).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.ShippingFee)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách đơn hàng
+    </div>
+</div>
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.OrderModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.OrderId).Title("ID").ClientTemplate("<label><#= 10000 + OrderId #></label>")
+                .Width(50)
+                .Filterable(false);
+            columns.Bound(x => x.CustomerName).Title("Khách Hàng")
+                .Filterable(false);
+            columns.Bound(x => x.MyOfficeIName).Title("Chi Nhánh")
+                .Width(120)
+                .Filterable(false);
+            columns.Bound(x => x.CreateDate).Title("Ngày Tạo").Format("{0:dd/MM/yyyy HH:mm}")
+                .Width(100)
+                .Filterable(false);
+        }).DataBinding(dataBinding => dataBinding.Ajax().Select("OrderDeliveryGridModel", "Order", new { orders = Model.Orders}))
+    ) 
+<script type="text/javascript">
+    $(window).load(
+    function () {
+        $("#ShippingFeeId").change(function () {
+            var shippingFeeId = $('#ShippingFeeId').val();
+            $.ajax({
+                url: '@Url.Action("GetCost", "ShippingFee")',
+            type: "POST",
+            dataType: "json",
+            // query will be the param used by your action method
+            data: { id: shippingFeeId },
+            success: function (data) {
+                var numericTextBox = $("#ShippingFee").data("tTextBox");
+                numericTextBox.value(data);
+            }
+        });
+        });
+    });
+</script>

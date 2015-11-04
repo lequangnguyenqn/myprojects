@@ -1,0 +1,29 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ImportTrackModel
+
+@{
+    ViewBag.Title = "Nhập kho";
+}
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            @Html.Partial("_ImportTrackViewDetail", ViewData)
+        </td>
+        <td class="rightcol">
+            @Html.Action("CreateImportDetail", "ImportTrack", new { id = Model.ImportTrackId })
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ("@Model.Mode" == "1") {
+            $(".rightcol").show();
+        }
+    });
+    function openCreateForm() {
+        $(".rightcol").show();
+    }
+    function hideCreateForm() {
+        $(".rightcol").show();
+    }
+
+</script>

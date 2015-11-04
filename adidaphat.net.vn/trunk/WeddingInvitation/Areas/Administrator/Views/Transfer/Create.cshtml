@@ -1,0 +1,29 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.TransferModel
+
+@{
+    ViewBag.Title = "Chuyển kho nội bộ";
+}
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            @Html.Partial("_TransferViewDetail", ViewData)
+        </td>
+        <td class="rightcol">
+            @Html.Action("CreateTransferItem", "Transfer", new { id = Model.TransferId })
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ("@Model.Mode" == "1") {
+            $(".rightcol").show();
+        }
+    });
+    function openCreateForm() {
+        $(".rightcol").show();
+    }
+    function hideCreateForm() {
+        $(".rightcol").show();
+    }
+
+</script>

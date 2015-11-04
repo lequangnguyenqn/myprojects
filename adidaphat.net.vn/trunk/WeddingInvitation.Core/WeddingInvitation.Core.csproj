@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{782124D9-3DAC-403D-89E0-40B148952870}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WeddingInvitation.Core</RootNamespace>
+    <AssemblyName>WeddingInvitation.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Catalog\Category.cs" />
+    <Compile Include="Models\Catalog\Product.cs" />
+    <Compile Include="Models\ContentManagement\EnumStaticPages.cs" />
+    <Compile Include="Models\ContentManagement\NewsCategoryItem.cs" />
+    <Compile Include="Models\ContentManagement\NewsItem.cs" />
+    <Compile Include="Models\ContentManagement\StaticPage.cs" />
+    <Compile Include="Models\Customers\Customer.cs" />
+    <Compile Include="Models\Customers\CustomerLogo.cs" />
+    <Compile Include="Models\Orders\Debt.cs" />
+    <Compile Include="Models\Orders\OrderDeliveryPackage.cs" />
+    <Compile Include="Models\Orders\Order.cs" />
+    <Compile Include="Models\Orders\OrderDetail.cs" />
+    <Compile Include="Models\Orders\OrderStatus.cs" />
+    <Compile Include="Models\Orders\PaymentPeriod.cs" />
+    <Compile Include="Models\Orders\PaymentTypes.cs" />
+    <Compile Include="Models\Settings\ExtraFee.cs" />
+    <Compile Include="Models\Settings\MyOffice.cs" />
+    <Compile Include="Models\Settings\RateMapping.cs" />
+    <Compile Include="Models\Settings\ShippingFee.cs" />
+    <Compile Include="Models\Settings\ShippingService.cs" />
+    <Compile Include="Models\Settings\StateProvince.cs" />
+    <Compile Include="Models\Storages\Expense.cs" />
+    <Compile Include="Models\Storages\ExpenseTypes.cs" />
+    <Compile Include="Models\Storages\ExportDetail.cs" />
+    <Compile Include="Models\Storages\ExportTrack.cs" />
+    <Compile Include="Models\Storages\ImportDetail.cs" />
+    <Compile Include="Models\Storages\ImportTrack.cs" />
+    <Compile Include="Models\Storages\ProductInStorage.cs" />
+    <Compile Include="Models\Storages\Storage.cs" />
+    <Compile Include="Models\Storages\Transfer.cs" />
+    <Compile Include="Models\Storages\TransferItem.cs" />
+    <Compile Include="Models\Users\Role.cs" />
+    <Compile Include="Models\Users\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

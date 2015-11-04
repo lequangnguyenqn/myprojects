@@ -1,0 +1,57 @@
+﻿@model int?
+@{
+    ViewBag.Title = "Danh sách kho";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#Storage"));
+        if ("@Model" == "1") {
+            $(".rightcol").show();
+        }
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách kho
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create", "Storage")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            @Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+            @Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "Storage", new { area = "administrator" })).ToHtmlString())
+            @(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.StorageModel>(), name: "Storage", controllerName: "Storage")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.StorageId).Title("ID").ClientTemplate("<a href=\"Storage/Edit/<#= StorageId #>\"><#= 10000 + StorageId #></a>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.StorageName).Title("Tên Kho")
+                            .Width(250)
+                            .Filterable(false);
+                        columns.Bound(x => x.Desciption).Title("Ghi Chú")
+                            .Filterable(false);
+                        columns.Bound(p => p.StorageId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= StorageId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                            .Width(100).Sortable(false)
+                            .Filterable(false);
+                    }))
+        </td>
+        <td class="rightcol" style="display: none">
+            @Html.Action("Create", "Storage")
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function openCreateForm() {
+        $(".rightcol").show();
+    }
+
+</script>

@@ -1,0 +1,192 @@
+﻿@model WeddingInvitation.Core.Models.Parcels.ParcelReportModel
+@{
+    ViewBag.Title = "Bảng kê bưu phẩm - Hàng hóa";
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Bảng kê bưu phẩm - Hàng hóa
+    </div>
+    <div class="options">
+        <a href="javascript:void(0)" onclick="Preview();" class="t-button">Xem trước</a>
+        <a href="@Url.Action("DownloadParcelReporting", "Reporting", new { area = "Administrator" })" class="t-button">Tải về</a>
+    </div>
+</div>
+
+<table width="99%">
+    <tr>
+        <td>
+            @Html.Label("Ngày")
+        </td>
+        <td>
+            @Html.Label("Nơi đi")
+        </td>
+        <td>
+            @Html.Label("Nơi đến")
+            Vùng: @Html.RadioButton("DeliverTo", (int)WeddingInvitation.Core.Models.Parcels.PaymentTypes.EnumPaymentTypes.Debt, new { id = "rdRegion", Checked = "checked" })
+            &nbsp;&nbsp;
+            Tỉnh thành: @Html.RadioButton("DeliverTo", (int)WeddingInvitation.Core.Models.Parcels.PaymentTypes.EnumPaymentTypes.Cash, new { id = "rdStateProvince" })
+            &nbsp;&nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @(Html.Telerik().DatePicker()
+                    .Name("DatePicker")
+                    .HtmlAttributes(new { id = "DatePicker_wrapper" })
+                    .ShowButton(true)
+                    .Value(DateTime.Now)
+            )
+        </td>
+        <td>
+            @Html.DropDownList("DeliverFrom", new SelectList(Model.StateProvinces, "StateProvinceId", "StateProvinceName"), "- Chọn -")
+        </td>
+        <td>
+            <div id="divRegion">
+                @Html.DropDownList("ddlRegion", new SelectList(Model.Regions, "RegionId", "RegionName"))
+            </div>
+            <div id="divStateProvince" style="display:none;">
+                @Html.DropDownList("ddlStateProvince", new SelectList(Model.StateProvinces, "StateProvinceId", "StateProvinceName"))
+            </div>
+        </td>
+    </tr>
+</table>
+<br />
+<br />
+@(Html.Telerik().Grid<WeddingInvitation.Core.Models.Parcels.ParcelReportModel>()
+        .Name("ParcelReporting")
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.No).Title("STT")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.TrackingNumbers).Title("Số Vận Đơn")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.AddressTo).Title("Nơi Đến")
+        .Filterable(false);
+        columns.Bound(x => x.CustomerName).Title("Khách Gửi")
+            .Width(250)
+            .Filterable(false);
+        columns.Bound(x => x.Weight).Title("Trọng Lượng")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.Note).Title("Ghi Chú")
+            .Width(100)
+            .Filterable(false);
+    })
+    .DataBinding(dataBinding => dataBinding.Ajax().Select("GetParcelReporting", "Reporting"))
+    .Pageable()
+    .Sortable()
+    .Scrollable()
+    .Groupable(grouping => grouping.Enabled(false))
+    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+    .EnableCustomBinding(true)
+    .Filterable()
+) 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ddlStateProvince").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        
+        $("#ddlRegion").multiselect({
+            header: true,
+            selectedText: '#/# đã chọn',
+            noneSelectedText: '- Chọn -',
+            selectedList: 0,
+            checkAllText: 'Chọn hết',
+            uncheckAllText: 'Bỏ chọn'
+        });
+        
+        $("#DeliverFrom").multiselect({
+            multiple: false,
+            noneSelectedText: '- Chọn -',
+            header: false,
+            selectedList: 0,
+        });
+        
+        $('#rdRegion').click(function () {
+            $('#divStateProvince').hide();
+            $('#divRegion').show();
+        });
+        $('#rdStateProvince').click(function () {
+            $('#divStateProvince').show();
+            $('#divRegion').hide();
+        });
+    });
+
+    function Preview() {
+        var datepicker = $('#DatePicker').data('tDatePicker');
+        var date = $.telerik.formatString('{0:dd/MM/yyyy}', datepicker.value());
+        var deliverFrom = $("#DeliverFrom").val();
+        if ($("#rdRegion").is(':checked')) {
+            var regions = $("#ddlRegion").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            jQuery.ajaxSettings.traditional = true;
+            $("#ParcelReporting").data('tGrid')
+                             .rebind({
+                                 DateReport: date,
+                                 DeliverFrom: deliverFrom,
+                                 ListChecks: regions,
+                                 IsReportByRegion: true
+                             });
+        }
+        else {
+            var stateProvinces = $("#ddlStateProvince").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            jQuery.ajaxSettings.traditional = true;
+            $("#ParcelReporting").data('tGrid')
+            .rebind({
+                DateReport: date,
+                DeliverFrom: deliverFrom,
+                ListChecks: stateProvinces,
+                IsReportByRegion: false
+            });
+        }
+        
+    }
+
+    $(window).load(function () {
+        $("#ddlStateProvince").multiselect("uncheckAll");
+        $("#ddlRegion").multiselect("uncheckAll");
+        $("#DeliverFrom").multiselect("uncheckAll");
+    });
+    
+    function onDataBinding(e) {
+        var datepicker = $('#DatePicker').data('tDatePicker');
+        var date = $.telerik.formatString('{0:dd/MM/yyyy}', datepicker.value());
+        var deliverFrom = $("#DeliverFrom").val();
+        if ($("#rdRegion").is(':checked')) {
+            var regions = $("#ddlRegion").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            var searchModel1 = {
+                DateReport: date,
+                DeliverFrom: deliverFrom,
+                ListChecks: regions,
+                IsReportByRegion: false
+            };
+            e.data = searchModel1;
+        }
+        else {
+            var stateProvinces = $("#ddlStateProvince").multiselect("getChecked").map(function () {
+                return this.value;
+            }).get();
+            var searchModel = {
+                DateReport: date,
+                DeliverFrom: deliverFrom,
+                ListChecks: stateProvinces,
+                IsReportByRegion: false
+            };
+            e.data = searchModel;
+        }
+    }
+</script>

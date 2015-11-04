@@ -1,0 +1,42 @@
+﻿@model WeddingInvitation.Models.LogOnModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        Đăng nhập vào quản trị
+    </title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/login-style.css")" type="text/css">
+</head>
+<body>
+
+    <div id="wrapper">
+            @using (Html.BeginForm("Logon", "Account", FormMethod.Post, new { id = "frmLogin", @class="login-form" }))
+            {
+                <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]">
+                <div class="header">
+                    <h1>Đăng nhập</h1>
+                </div>
+                
+                <div class="content">
+                    <input name="UserName" type="text" class="input username" placeholder="User name" />
+                    <div class="user-icon"></div>
+                    <input name="Password" type="password" class="input password" placeholder="Password" />
+                    <div class="pass-icon"></div>		
+                </div>
+                
+                <div class="footer">
+                    <span style="color: red;">@Html.ValidationSummary(true)</span>
+                    <input type="submit" name="submit" value="Đăng nhập" class="button" />
+                </div>
+            }
+
+    </div>
+    <div class="gradient"></div>
+
+
+</body>
+</html>

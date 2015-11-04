@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "Danh sách đơn hàng chờ in";
+    Layout = "~/Areas/Administrator/Views/Shared/_LayoutTwoColumns.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#Order"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách đơn hàng chờ in
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có muốn thực hiện thao tác này?", @Url.Action("PrintDone", "Order", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.OrderModel>(), name: "Order", action: "PrintingGridModel", controllerName: "Order", routeValues: null)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.OrderId).Title("ID").ClientTemplate("<label><#= 10000 + OrderId #></label>")
+                            .Width(50)
+                            .Filterable(false);
+                        columns.Bound(x => x.CustomerName).Title("Khách Hàng")
+                            .Filterable(false);
+                        columns.Bound(x => x.MyOfficeIName).Title("Chi Nhánh")
+                            .Width(120)
+                            .Filterable(false);
+                        columns.Bound(x => x.CreateDate).Title("Ngày Tạo").Format("{0:dd/MM/yyyy HH:mm}")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.StatusDisplay).Title("Trạng Thái")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.PrintUserName).Title("Nhân Viên In")
+                            .Width(150)
+                            .Filterable(false);
+                        columns.Bound(p => p.OrderId)
+                            .ClientTemplate("<a onclick='onMessageBoxDownloadFile(<#= OrderId #>)'>Chi tiết</a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("")
+                            .Width(70).Sortable(false)
+                            .Filterable(false);
+                        columns.Bound(x => x.StatusStoppingDisplay).Title("Tạm ngưng")
+                            .Width(150)
+                            .Filterable(false)
+                            .Visible(false);
+                        columns.Bound(p => p.OrderId)
+                            .ClientTemplate("<a onclick='onMessageBoxOrderStopping(<#= OrderId #>)'>" + "<img src=\"" + Url.Action("Index", "Home", new { area = "" }) + "<#= StatusStoppingDisplay #>" + "\" />" + "</a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<b>Tạm ngưng</b>")
+                            .Width(80)
+                            .Filterable(false).Sortable(false);
+                        columns.Bound(x => x.StatusPrintingDisplay).Title("Nhân Viên In")
+                           .Width(250)
+                           .Visible(false)
+                           .Filterable(false);
+                        columns.Bound(p => p.OrderId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= OrderId #>)'><#= StatusPrintingDisplay #></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("")
+                            .Width(80).Sortable(false)
+                            .Filterable(false);
+                    }).Sortable(p => p.SortMode(GridSortMode.MultipleColumn).OrderBy(o =>
+                        {
+                            o.Add(b => b.ShowOnTop).Descending();
+                            o.Add(t => t.OrderId);
+                        })))
+@{ Html.Telerik().Window()
+        .Name("OrderDetails")
+        .Title("Sản phẩm")
+        .Draggable(true)
+        .Visible(false)
+        .Modal(true)
+        .Width(870)
+        .Height(260)
+        .Render();
+}
+<script type="text/javascript">
+    function onMessageBoxDownloadFile(id) {
+        var window = $("#OrderDetails").data("tWindow");
+        window.ajaxRequest($.validator.format("{0}/{1}", "@Url.Action("ListOrderDetailPrint", "Order")", id || ""));
+        window.center().open();
+    }
+</script>
+@{Html.Telerik().Window()
+        .Name("MessageBoxOrderStopping")
+        .Title("Cảnh báo")
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Width(250)
+        .Height(100)
+        .Effects(fx => fx
+                    .Zoom()
+                    .Opacity()
+                    .OpenDuration(300)
+                    .CloseDuration(300)
+        )
+        .Content(@<text>
+    <script type="text/javascript">
+        function onMessageBoxOrderStoppingClose() {
+            $('#MessageBoxOrderStopping').data('tWindow').center().close();
+        }
+
+        function onMessageBoxOrderStopping(id) {
+            $("#orderId").val(id);
+            $('#MessageBoxOrderStopping').data('tWindow').center().open();
+        }
+    </script>
+    <form action="@Url.Action("OrderStopping", "Order")" method="post">
+        <input type="hidden" id="orderId" name="id" />
+        <input type="hidden" id="mode" name="mode" value="1" />
+        <div style="text-align:center"><p>Bạn có muốn thực hiện thao tác này?</p></div>
+        <table>
+            <tr>
+                <td>
+                    <div class="form-actions" style="margin-left:55px">
+                        <input type="submit" style="height:25px;width:50px" class="t-button t-state-default" value="Yes" />
+                    </div>
+                </td>
+                <td>
+                    <div class="form-actions" style="margin-left:0px">
+                        <input type="button" style="height:25px;width:50px" onclick="onMessageBoxOrderStoppingClose();"
+                               class="t-button t-state-default" value="No" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</text>)
+        .Render();}

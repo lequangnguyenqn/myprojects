@@ -1,0 +1,97 @@
+﻿@using WeddingInvitation.Data
+@using WeddingInvitation.Infrastructure
+@{
+    ViewBag.Title = "Thông báo";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#OrderStopping"));
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#StoreNeedImport"));
+    });
+</script>
+<div class="section-title">
+    <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-dashboard.png")" alt="" />
+    Thông báo
+</div>
+<table class="stats">
+    <tbody>
+        <tr>
+            @if (WorkContext.Roles.Contains(RoleType.Administrator) || WorkContext.Roles.Contains(RoleType.QuanLyChung) || WorkContext.Roles.Contains(RoleType.KeToan) || WorkContext.Roles.Contains(RoleType.KinhDoanh))
+            {
+                <td class="orderstatistics">
+                    <div class="section-header">
+                        <div class="title">
+                            <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+                            Sản phẩm gần hết
+                        </div>
+                    </div>
+                    @Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch", showFromSearch: false)
+                    @Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "Storage", new { area = "administrator" })).ToHtmlString())
+                    @(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.ProductInStorageModel>(), name: "StoreNeedImport", action: "StoreNeedImportGridModel", controllerName: "Storage", routeValues: null)
+                          .Columns(columns =>
+                          {
+                              columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                                  .Width(100)
+                                  .Filterable(false);
+                              columns.Bound(x => x.StorageName).Title("Kho")
+                                  .Width(100)
+                                  .Filterable(false);
+                              columns.Bound(x => x.Amount).Title("Số Lượng")
+                                  .Width(100)
+                                  .Format("{0:n0}")
+                                  .Aggregate(aggreages => aggreages.Sum())
+                                  .ClientGroupFooterTemplate("Tổng: <#= $.telerik.formatString('{0:n0}', Sum) #>")
+                                  .Filterable(false);
+                          })
+                          .Scrollable(scrolling => scrolling.Height(200)))
+                </td>
+            }
+        </tr>
+        @if (WorkContext.Roles.Contains(RoleType.Administrator) || WorkContext.Roles.Contains(RoleType.QuanLyChung))
+        {
+            <tr>
+                <td class="customerstatistics">
+                    @Html.Action("OrderCancelForManager", "Home")
+                </td>
+            </tr>
+        }
+        @if (WorkContext.Roles.Contains(RoleType.GiaoHang))
+        {
+            <tr>
+                <td class="customerstatistics">
+                    @Html.Action("OrderCancelForDelivery", "Home")
+                </td>
+            </tr>
+        }
+        @if (WorkContext.Roles.Contains(RoleType.QuanLyIn))
+        {
+            <tr>
+                <td class="customerstatistics">
+                    @Html.Action("OrderCancelForPrint", "Home")
+                </td>
+            </tr>
+            <tr>
+                <td class="customerstatistics">
+                    @Html.Action("ManagerApprove", "Home")
+                </td>
+            </tr>
+        }
+        @if (WorkContext.Roles.Contains(RoleType.NVKho))
+        {
+            <tr>
+                <td colspan="2" class="customerstatistics">
+                    @Html.Action("OrderCancelForStorage", "Home")
+                </td>
+            </tr>
+            <tr>
+                <td class="customerstatistics">
+                    @Html.Action("StorageStaffApprove", "Home")
+                </td>
+                <td class="customerstatistics">
+                    @Html.Action("StorageStaffApproveExport", "Home")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

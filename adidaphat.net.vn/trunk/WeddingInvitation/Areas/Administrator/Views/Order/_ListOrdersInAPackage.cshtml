@@ -1,0 +1,27 @@
+﻿@model string
+@{
+    Layout = null;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách đơn hàng
+    </div>
+</div>
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.OrderModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.OrderId).Title("ID").ClientTemplate("<label><#= 10000 + OrderId #></label>")
+                .Width(50)
+                .Filterable(false);
+            columns.Bound(x => x.CustomerName).Title("Khách Hàng")
+                .Filterable(false);
+            columns.Bound(x => x.MyOfficeIName).Title("Chi Nhánh")
+                .Width(120)
+                .Filterable(false);
+            columns.Bound(x => x.CreateDate).Title("Ngày Tạo").Format("{0:dd/MM/yyyy HH:mm}")
+                .Width(100)
+                .Filterable(false);
+        }).DataBinding(dataBinding => dataBinding.Ajax().Select("OrderDeliveryGridModel", "Order", new { orders = Model}))
+    ) 

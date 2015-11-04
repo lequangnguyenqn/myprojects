@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Danh sách chi nhánh";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#MyOffice"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách chi nhánh
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create", "MyOffice")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "MyOffice", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid<WeddingInvitation.Areas.Administrator.Models.MyOfficeModel>(new List<WeddingInvitation.Areas.Administrator.Models.MyOfficeModel>(), name: "MyOffice", controllerName: "MyOffice")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.MyOfficeId).Title("ID").ClientTemplate("<a href=\"MyOffice/Edit/<#= MyOfficeId #>\"><#= 10000 + MyOfficeId #></a>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.OfficeName).Title("Tên chi nhánh")
+                            .Width(250)
+                            .Filterable(false);
+                        columns.Bound(x => x.Address).Title("Địa Chỉ")
+                            .Filterable(false);
+                        columns.Bound(x => x.PhoneNumber).Title("Số Điện Thoại")
+                            .Width(150)
+                            .Filterable(false);
+                        columns.Bound(x => x. Fax).Title("Fax")
+                            .Width(150)
+                            .Filterable(false);
+                        columns.Bound(p => p.MyOfficeId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= MyOfficeId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                            .Width(100).Sortable(false)
+                            .Filterable(false);
+                    }))

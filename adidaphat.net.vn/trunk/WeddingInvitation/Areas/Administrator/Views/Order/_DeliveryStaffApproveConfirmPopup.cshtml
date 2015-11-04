@@ -1,0 +1,29 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.OrderModel
+@{
+    Layout = null;
+    ViewBag.Title = "Xác nhận";
+}
+@using (Html.BeginForm("DeliveryStaffApproveDone", "Order", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            Thông tin gửi hàng và thu hộ
+        </div>
+        <div class="options">
+            <button id="btnSave" type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.OrderId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ngày giờ")
+            </td>
+            <td class="">
+                @Html.Telerik().DateTimePickerFor(model => model.DeliveredDate).Interval(15)
+            </td>
+        </tr>
+    </table>
+}

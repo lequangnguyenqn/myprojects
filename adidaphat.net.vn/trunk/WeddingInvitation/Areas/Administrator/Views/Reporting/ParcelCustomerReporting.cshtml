@@ -1,0 +1,127 @@
+﻿@using WeddingInvitation.Core.Models.Parcels
+@using WeddingInvitation.Services.Parcels
+@model WeddingInvitation.Core.Models.Parcels.ParcelCustomerReportModel
+@{
+    ViewBag.Title = "Bảng kê tổng hợp";
+}
+@using (Html.BeginForm("ParcelCustomerReporting", "Reporting", FormMethod.Post))
+{
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Bảng kê tổng hợp
+    </div>
+    <div class="options">
+        <a href="javascript:void(0)" onclick="Preview();" class="t-button">Xem trước</a>
+        <button type="submit" name="save" value="Tải về" tabindex="6" class="t-button">Tải về</button>
+        @*<a href="@Url.Action("DownloadParcelReporting", "Reporting", new { area = "Administrator" })" class="t-button">Tải về</a>*@
+    </div>
+</div>
+
+<table width="99%">
+    <tr>
+        <td>
+            @Html.Label("Khách hàng")
+        </td>
+        <td>
+            @Html.Label("Loại")
+        </td>
+        <td>
+            @Html.Label("Từ ngày")
+        </td>
+        <td>
+            @Html.Label("Đến ngày")
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.DropDownListFor(model => model.CustomerId, new SelectList(Model.Customers, "CustomerId", "CustomerName"), "-Tất Cả-", new { style = "width:215px" })
+        </td>
+        <td>
+            @Html.DropDownListFor(model => model.PaymentType, PaymentTypes.GetPaymentTypes(), new { style = "width:215px" })
+        </td>
+        <td>
+            @Html.Telerik().DatePickerFor(model => model.FromDate)
+        </td>
+        <td>
+            @Html.Telerik().DatePickerFor(model => model.ToDate)
+        </td>
+    </tr>
+</table>
+}
+<br />
+<br />
+@(Html.Telerik().Grid<WeddingInvitation.Core.Models.Parcels.ParcelCustomerReportModel>()
+    .Name("ParcelCustomerReporting")
+    .Columns(columns =>
+    {
+        columns.Bound(x => x.No).Title("STT")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.DateOfSendingDisplay).Title("Ngày Gửi")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.TrackingNumbers).Title("Số Vận Đơn")
+            .Width(150)
+            .Filterable(false);
+        columns.Bound(x => x.DeliverTo).Title("Nơi Đến")
+        .Filterable(false);
+        columns.Bound(x => x.WeightDisplay).Title("Trọng Lượng")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.CostDisplay).Title("Cước Chính")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.Vat).Title("Thuế VAT")
+            .Width(100)
+            .Filterable(false);
+        columns.Bound(x => x.TotalCostDisplay).Title("Tổng Cộng")
+            .Width(100)
+            .Filterable(false);
+    })
+    .DataBinding(dataBinding => dataBinding.Ajax().Select("GetParcelCustomerReporting", "Reporting"))
+    .Pageable()
+    .Sortable()
+    .Scrollable()
+    .Groupable(grouping => grouping.Enabled(false))
+    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+    .EnableCustomBinding(true)
+    .Filterable()
+) 
+<script type="text/javascript">
+    $(document).ready(function () {
+        jQuery.validator.methods["date"] = function(value, element) { return true; };
+    });
+    function Preview() {
+        var datePickerFromDate = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', datePickerFromDate.value());
+        var datePickerToDate = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', datePickerToDate.value());
+
+        var customerId = $("#CustomerId").val();
+        var paymentType = $("#PaymentType").val();
+        $("#ParcelCustomerReporting").data('tGrid')
+            .rebind({
+                CustomerId: customerId,
+                PaymentType: paymentType,
+                FromDate: fromDate,
+                ToDate: toDate
+            });
+
+        }
+    function onDataBinding(e) {
+        var datePickerFromDate = $('#FromDate').data('tDatePicker');
+        var fromDate = $.telerik.formatString('{0:dd/MM/yyyy}', datePickerFromDate.value());
+        var datePickerToDate = $('#ToDate').data('tDatePicker');
+        var toDate = $.telerik.formatString('{0:dd/MM/yyyy}', datePickerToDate.value());
+        var customerId = $("#CustomerId").val();
+        var paymentType = $("#PaymentType").val();
+        var searchModel = {
+            CustomerId: customerId,
+            PaymentType: paymentType,
+            FromDate: fromDate,
+            ToDate: toDate
+        };
+        e.data = searchModel;
+    }
+</script>

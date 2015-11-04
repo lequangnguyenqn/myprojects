@@ -1,0 +1,298 @@
+﻿@model IEnumerable<WeddingInvitation.Models.AccountForListModel>
+@{
+    ViewBag.Title = "Account Manager";
+}
+
+<script type="text/javascript">
+    function EditUser() {
+        var userchecked = $("input[type='checkbox'][class~='chk_user']:checked").val();
+        window.location.href = "@Url.Action("Edit", "Account")"  + "/"+userchecked;
+    }
+
+    $(document).ready(function () {
+        $("#dialogConfirmDeleteAccount").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            modal: true,
+            buttons: {
+                "Delete this account": function () {
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#dialogConfirmDisableAccount").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            modal: true,
+            buttons: {
+                "Disable this account": function () {
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#dialogConfirmEnableAccount").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            modal: true,
+            buttons: {
+                "Enable this account": function () {
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialogConfirmDisableUser").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            modal: true,
+            buttons: {
+                "Disable this user": function () {
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialogConfirmEnableUser").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            modal: true,
+            buttons: {
+                "Enable this user": function () {
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    })
+
+    function DeleteAccount(id) {
+        $("#dialogConfirmDeleteAccount").dialog('option', 'buttons', {
+            "Yes": function () {
+                var $chkAccounts = $("input[name=chkAccounts]:checked");
+                $.ajax({
+                    url: '@Url.Action("DeleteAccount", "Account")',
+                    type: 'POST',
+                    data: $chkAccounts,
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = "@Url.Action("Index", "Account")";
+                    }
+                });
+                $(this).dialog("close");
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        });
+        $("#dialogConfirmDeleteAccount").dialog("open");
+        return false
+    }
+
+    function EnableAccount(id) {
+        $("#dialogConfirmEnableAccount").dialog('option', 'buttons', {
+            "Yes": function () {
+                var $chkAccounts = $("input[name=chkAccounts]:checked");
+                $.ajax({
+                    url: '@Url.Action("DisableAccount", "Account")',
+                    type: 'POST',
+                    data: $chkAccounts,
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = "@Url.Action("Index", "Account")";
+                    }
+                });
+                $(this).dialog("close");
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        });
+        $("#dialogConfirmEnableAccount").dialog("open");
+        return false
+    }
+
+    function DisableAccount(id) {
+        $("#dialogConfirmDisableAccount").dialog('option', 'buttons', {
+            "Yes": function () {
+                var $chkAccounts = $("input[name=chkAccounts]:checked");
+                $.ajax({
+                    url: '@Url.Action("DisableAccount", "Account")',
+                    type: 'POST',
+                    data: $chkAccounts,
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = "@Url.Action("Index", "Account")";
+                    }
+                });
+                $(this).dialog("close");
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        });
+        $("#dialogConfirmDisableAccount").dialog("open");
+        return false
+    }
+
+    function DisableUser(id) {
+        $("#dialogConfirmDisableUser").dialog('option', 'buttons', {
+            "Yes": function () {
+                var $chkUsers = $("input[name=chkUsers]:checked");
+                $.ajax({
+                    url: '@Url.Action("DisableUser", "Account")',
+                    type: 'POST',
+                    data: $chkUsers,
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = "@Url.Action("Index", "Account")";
+                    }
+                });
+                $(this).dialog("close");
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        });
+        $("#dialogConfirmDisableUser").dialog("open");
+        return false
+    }
+
+    function EnableUser(id) {
+        $("#dialogConfirmEnableUser").dialog('option', 'buttons', {
+            "Yes": function () {
+                var $chkUsers = $("input[name=chkUsers]:checked");
+                $.ajax({
+                    url: '@Url.Action("DisableUser", "Account")',
+                    type: 'POST',
+                    data: $chkUsers,
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = "@Url.Action("Index", "Account")";
+                    }
+                });
+                $(this).dialog("close");
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        });
+        $("#dialogConfirmEnableUser").dialog("open");
+        return false
+    }
+
+    function ManageAsThisUser() {
+        var $chkUsers = $("input[name=chkUsers]:checked");
+        $.ajax({
+            url: '@Url.Action("ManageAsThisUser", "Account")',
+            type: 'POST',
+            data: $chkUsers,
+            dataType: 'json',
+            success: function (data) {
+                window.location.href = "@Url.Action("Index", "Sites")";
+            }
+        });
+    }
+
+    function check_small_search_form() {
+            var search_terms = $("#txtsearch");
+            if (search_terms.val() == "search") {
+                search_terms.focus();
+                return false;
+            }
+            return true;
+        }
+</script>
+@Html.Action("AccountStatistics", "Account")
+<div class="main_content2">
+    <div class="search">
+        <div class="site">
+            All Accounts
+        </div>
+        <div id="search">
+            <input type="submit" id="btnsearch" class="searchBtn" value="" />
+            <input type="text" id="txtsearch" name="txtSearch" class="search_input" placeholder="Search Accounts" />
+        </div>
+    </div>
+    <div class="list-content">
+        <nav class="buttons_cpanel">
+            <a class="disableaccount hidden" onclick="DisableAccount()" href="javascript:void(0);"><img src="@Url.Content("~/Content/images/icon-delete.png")" />Disable account</a>
+            <a class="enableaccount hidden" onclick="EnableAccount()" href="javascript:void(0);"><img src="@Url.Content("~/Content/images/icon-add.png")" />Enable Account</a>
+            <a class="manageuser hidden" onclick="ManageAsThisUser()" href="javascript:void(0);"><img src="@Url.Content("~/Content/images/icon-preview.png")" />Manage as this user</a>
+            <a class="disableuser hidden" onclick="DisableUser()" href="javascript:void(0);"><img src="@Url.Content("~/Content/images/icon-delete.png")" />Disable User</a>
+            <a class="enableuser hidden" onclick="EnableUser()" href="javascript:void(0);"><img src="@Url.Content("~/Content/images/icon-add.png")" />Enable User</a>
+            <a class="deleteaccount hidden" onclick="DeleteAccount()" href="javascript:void(0);"><img src="@Url.Content("~/Content/images/icon-delete.png")" />Delete Account</a>
+            <a href="@Url.Action("Create", "Account")" class="regnewaccount"><img src="@Url.Content("~/Content/images/icon-add.png")" />Register New Account</a>            
+        </nav>
+        <div id="divListAccount">
+            @Html.Partial("List", ViewData)
+        </div>
+    </div>
+</div>
+<div id="dialogConfirmDeleteAccount" title="Delete the account(s)?">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        This account(s) will be delete. Are you sure?</p>
+</div>
+<div id="dialogConfirmDisableAccount" title="Disable the account(s)?">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        This account(s) will be disabled. Are you sure?</p>
+</div>
+<div id="dialogConfirmEnableAccount" title="Enable the account(s)?">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        This account(s) will be enabled. Are you sure?</p>
+</div>
+<div id="dialogConfirmDisableUser" title="Disable the user(s)?">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        This user(s) will be disabled. Are you sure?</p>
+</div>
+<div id="dialogConfirmEnableUser" title="Enable the user(s)?">
+    <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+        This user(s) will be enabled. Are you sure?</p>
+</div>
+<script type="text/javascript">
+    
+    //Ajax Search PrizeDraws
+    function searchPrizeDraws(txtSearch) {
+        $("#divListAccount").hide();
+        $("#divListAccount").html("");
+        $("#divListAccount").load('@Url.Action("List", "Account")', { txtSearch: txtSearch }, function () {
+            $("#divListAccount").show(500);
+        });
+    }
+
+    $("#btnsearch").click(function () {
+        var txtSearch = $("#txtsearch").val();
+        searchPrizeDraws(txtSearch);
+    });
+
+    $("#txtsearch").keydown(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if (code == 13) {
+            var txtSearch = $("#txtsearch").val();
+            searchPrizeDraws(txtSearch);
+        }
+    });
+</script>

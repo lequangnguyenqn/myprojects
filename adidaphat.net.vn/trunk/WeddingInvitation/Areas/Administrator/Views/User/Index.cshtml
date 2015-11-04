@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Danh sách nhân viên";
+    Layout = "~/Areas/Administrator/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#User"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách nhân viên
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create","User")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "user", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.UserModel>(), name: "User", controllerName: "User")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.UserId).Title("MSNV")
+                            .Width(70)
+                            .Filterable(false);
+                        columns.Bound(x => x.Email).Title("Tên Đăng Nhập").ClientTemplate("<a href=\"User/Edit/<#= UserId #>\"><#= Email #></a>")
+                            .Width(300)
+                            .Filterable(false);
+                        columns.Bound(x => x.FullName).Title("Họ và Tên")
+                            .Filterable(false);
+                        columns.Bound(x => x.RoleName).Title("Chức Danh")
+                            .Width(200)
+                            .Filterable(false);
+                        columns.Bound(x => x.CreateDate).Title("Tạo Ngày").Format("{0:dd/MM/yyyy}")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(p => p.IsLockedOut).ClientTemplate("<img alt='' src=<#=IsLockedOut?\"../Content/Images/inactive_icon.png\":\"../Content/Images/active_icon.png\"#> />")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("Trạng thái")
+                            .Width(70)
+                            .Filterable(false);
+                        columns.Bound(p => p.UserId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= UserId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                            .Width(70).Sortable(false)
+                            .Filterable(false);
+                    }).Sortable(p => p.OrderBy(o => o.Add(b => b.UserId).Descending())))

@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Danh sách phí phụ thêm";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#ExtraFee"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách phí phụ thêm
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create", "ExtraFee")" class="t-button">Tạo mới</a>
+    </div>
+</div>
+@Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "ExtraFee", new { area = "administrator" })).ToHtmlString())
+@(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.ExtraFeeModel>(), name: "ExtraFee", controllerName: "ExtraFee")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.ExtraFeeId).Title("ID").ClientTemplate("<a href=\"ExtraFee/Edit/<#= ExtraFeeId #>\"><#= 10000 + ExtraFeeId #></a>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.ExtraFeeName).Title("Tên")
+                            .Filterable(false);
+                        columns.Bound(x => x.AmountFromDisplay).Title("Số Lượng Từ")
+                            .Width(200)
+                            .Filterable(false);
+                        columns.Bound(x => x.AmountToDisplay).Title("Số Lượng Đến")
+                            .Width(200)
+                            .Filterable(false);
+                        columns.Bound(x => x.CostDisplay).Title("Phí Thêm")
+                            .Width(200)
+                            .Filterable(false);
+                        columns.Bound(p => p.ExtraFeeId)
+                            .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= ExtraFeeId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                            .HtmlAttributes(new { style = "text-align:center" })
+                            .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                            .Width(100).Sortable(false)
+                            .Filterable(false);
+                    }))

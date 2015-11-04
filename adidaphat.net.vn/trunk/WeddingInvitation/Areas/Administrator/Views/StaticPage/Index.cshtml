@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Danh sách các trang tĩnh";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#StaticPage"));
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách các trang tĩnh
+    </div>
+    <div class="options">
+    </div>
+</div>
+<div style="display: none;">
+    @Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+</div>
+@(Html.Osd().Grid<WeddingInvitation.Areas.Administrator.Models.StaticPageModel>(new List<WeddingInvitation.Areas.Administrator.Models.StaticPageModel>(), name: "StaticPage", controllerName: "StaticPage")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.StaticPageId).Title("ID").ClientTemplate("<a href=\"StaticPage/Edit/<#= StaticPageId #>\"><#= 10000 + StaticPageId #></a>")
+                            .Width(100)
+                            .Filterable(false);
+                        columns.Bound(x => x.Description).Title("Mô tả")
+                            .Sortable(false)
+                            .Filterable(false);
+                    }))

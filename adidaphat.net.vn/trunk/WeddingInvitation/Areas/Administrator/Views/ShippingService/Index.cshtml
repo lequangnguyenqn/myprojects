@@ -1,0 +1,63 @@
+﻿@model int?
+@{
+    ViewBag.Title = "Danh sách chành xe";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        new SearchHelper($("#txtSearch"), $("#btnSearch"), $("#ShippingService"));
+        if ("@Model" == "1") {
+            $(".rightcol").show();
+        }
+    });
+</script>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách chành xe
+    </div>
+    <div class="options">
+        <a onclick="openCreateForm()" class="t-button">Tạo mới</a>
+    </div>
+</div>
+
+<table class="dashboard">
+    <tr>
+        <td class="maincol">
+            @Helpers.SearchPanel(text: "Nhập vào từ khóa tìm kiếm...", btnSearch: "btnSearch", txtSearch: "txtSearch")
+            @Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("delete", "ShippingService", new { area = "administrator" })).ToHtmlString())
+            @(Html.Osd().Grid(new List<WeddingInvitation.Areas.Administrator.Models.ShippingServiceModel>(), name: "ShippingService", controllerName: "ShippingService")
+                      .Columns(columns =>
+                      {
+                          columns.Bound(x => x.ShippingServiceId).Title("ID").ClientTemplate("<a href=\"ShippingService/Edit/<#= ShippingServiceId #>\"><#= 10000 + ShippingServiceId #></a>")
+                              .Width(70)
+                              .Filterable(false);
+                          columns.Bound(x => x.ShippingServiceName).Title("Tên chành xe")
+                              .Filterable(false);
+                          columns.Bound(x => x.StartAt).Title("Giờ xe chạy").Format("{0: HH:mm}")
+                              .Width(100)
+                              .Filterable(false);
+                          columns.Bound(x => x.CoachStation).Title("Bến xe đậu")
+                              .Width(250)
+                              .Filterable(false);
+                          columns.Bound(x => x.PhoneNumber).Title("Số điện thoại")
+                              .Width(150)
+                              .Filterable(false);
+                          columns.Bound(p => p.ShippingServiceId)
+                              .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= ShippingServiceId #>)'><img src=\" ../Content/Images/delete_16_16.png\" /></a>")
+                              .HtmlAttributes(new { style = "text-align:center" })
+                              .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                              .Width(70).Sortable(false)
+                              .Filterable(false);
+                      }).Sortable(p => p.OrderBy(o => o.Add(b => b.ShippingServiceId).Descending())))
+        </td>
+        <td class="rightcol" style="display: none">
+            @Html.Action("Create", "ShippingService")
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function openCreateForm() {
+        $(".rightcol").show();
+    }
+    
+</script>

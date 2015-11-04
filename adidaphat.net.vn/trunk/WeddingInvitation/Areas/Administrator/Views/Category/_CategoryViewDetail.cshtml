@@ -1,0 +1,47 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.CategoryModel
+@using (Html.BeginForm("Save", "Category", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.CategoryId > 0 ? "Sửa bộ sản phẩm" : "Tạo bộ sản phẩm")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.CategoryId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Mã loại sản phẩm")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CategoryCode)
+                @Html.ValidationMessageFor(model => model.CategoryCode)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên loại sản phẩm")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.CategoryName)
+                @Html.ValidationMessageFor(model => model.CategoryName)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Mô tả")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Desciption, new { @rows = "5"})
+                @Html.ValidationMessageFor(model => model.Desciption)
+            </td>
+        </tr>
+    </table>
+}

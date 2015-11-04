@@ -1,0 +1,116 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ImportTrackModel
+@using (Html.BeginForm("Save", "ImportTrack", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.ImportTrackId > 0 ? "Sửa nhập kho" : "Tạo mới nhập kho")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            @*<a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>*@
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.ImportTrackId)
+    <table width="99%">
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Ngày tạo")
+            </td>
+            <td align="left">
+                @Html.Telerik().DatePickerFor(model => model.CreateDate).ClientEvents(events => events.OnChange("onChange_CreateDate"))
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Kho nhận")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StorageId, new SelectList(Model.Storages, "StorageId", "StorageName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.StorageId, "Kho nhận là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "5" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+    </table>
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Danh sách sản phẩm
+    </div>
+    @*<div class="options">
+        <a onclick="openCreateForm()"  class="t-button">Thêm</a>
+    </div>*@
+</div>
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("DeleteImportDetail", "ImportTrack", new { area = "administrator" })).ToHtmlString())
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.ImportDetailModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.CategoryName).Title("Bộ")
+                .Width(150)
+                .Filterable(false);
+            columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                .Width(150)
+                .Filterable(false);
+            columns.Bound(x => x.AmountDisplay).Title("Số Lượng")
+                .Width(100)
+                .Filterable(false);
+            columns.Bound(x => x.Note).Title("Ghi Chú")
+                .Sortable(false)
+                .Filterable(false);
+            columns.Bound(p => p.ImportDetailId)
+                .ClientTemplate("<a onclick='onMessageBoxActionDelete(<#= ImportDetailId #>)'><img src=\"" + Url.Content("~/Content/Images/delete_16_16.png") + "\" /></a>")
+                .HtmlAttributes(new { style = "text-align:center" })
+                .HeaderHtmlAttributes(new { style = "text-align:center" })
+                .Width(70).Sortable(false)
+                .Title("<label style=\"color:red; font-weight:bold\">Xóa</label>")
+                .Sortable(false)
+                .Filterable(false);
+        }).DataBinding(dataBinding => dataBinding.Ajax().Select("GridModelImportDetail", "ImportTrack"))
+        .Groupable(grouping => grouping.Groups(groups =>
+                    {
+                        groups.Add(c => c.CategoryName);
+                    }).Visible(false))
+) 
+<script>
+    $(window).load(
+    function () {
+        $("#StorageId").change(function () {
+            SaveImportTrackToSession();
+        });
+        $("#Note").change(function () {
+            SaveImportTrackToSession();
+        });
+    });
+    function onChange_CreateDate(e) {
+        SaveImportTrackToSession();
+    }
+    function SaveImportTrackToSession() {
+        var CreateDateTime = $('#CreateDate').data('tDatePicker');
+        var CreateDate = $.telerik.formatString('{0:dd/MM/yyyy}', CreateDateTime.value());
+        var StorageId = $("#StorageId").val();
+        var Note = $("#Note").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveImportTrackToSession", "ImportTrack")",
+            dataType: "json",
+            data: { StorageId: StorageId, Note: Note, CreateDate: CreateDate },
+            success: function (data) {
+            },
+            error: function () {
+                console.log('An error occurred');
+            }
+        });
+    }
+</script>

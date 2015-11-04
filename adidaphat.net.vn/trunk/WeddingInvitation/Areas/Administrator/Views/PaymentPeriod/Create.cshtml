@@ -1,0 +1,56 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.PaymentPeriodModel
+
+@{
+    ViewBag.Title = "";
+    Layout = null;
+}
+@using (Html.BeginForm("Save", "PaymentPeriod", FormMethod.Post))
+{
+    @*<div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            Khách hàng thanh toán
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+        </div>
+    </div>*@
+
+    @Html.HiddenFor(model => model.OrderId)
+    <table width="99%">
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Ngày tạo")
+            </td>
+            <td align="left">
+                @Html.Telerik().DatePickerFor(model => model.CreateDate)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số tiền")
+            </td>
+            <td style="padding-bottom:10px">
+                @Html.Telerik().NumericTextBoxFor(model => model.Paid).MinValue(0).MaxValue(int.MaxValue).NumberGroupSeparator(".").DecimalDigits(0).DecimalSeparator(",")
+                @Html.ValidationMessageFor(model => model.Paid)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Ghi chú")
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Note, new { @rows = "3" })
+                @Html.ValidationMessageFor(model => model.Note)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+            </td>
+            <td class="adminData">
+                <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+                <button type="button" name="save" value="Save" tabindex="6" class="t-button" onclick="onMessageBoxPaidClose();">Đóng</button>
+            </td>
+        </tr>
+    </table>
+}

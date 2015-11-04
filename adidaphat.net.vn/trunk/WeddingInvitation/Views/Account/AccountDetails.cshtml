@@ -1,0 +1,107 @@
+﻿@model WeddingInvitation.Models.AccountDetailsModel
+@{
+    ViewBag.Title = "Account Details";
+}
+@using (Html.BeginForm("AccountDetails", "Account", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.UserId)
+    @Html.HiddenFor(model => model.Password)
+    @Html.HiddenFor(model => model.ConfirmPassword)
+    <div class="bg_wireless">
+        <div class="site">
+           @Model.CompanyName: Settings</div>
+    </div>
+    <div class="main_content account_detail">
+        <nav class="list-content">
+            <a class="tab active">Account Details</a> 
+            <a href="@Url.Action("ChangePassword", "Account")" class="tab">Change Password</a> 
+            <a href="@Url.Action("MyPackage", "Account")" class="tab">My Package</a>
+            <a href="@Url.Action("Preferences", "Account")" class="tab">Preferences</a>
+        </nav>
+        <div class="edit_item group_account">
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Contact Name</label>
+                @Html.TextBoxFor(model => model.ContactName, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.ContactName)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Email Address</label>
+                @Html.TextBoxFor(model => model.EmailAddress, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.EmailAddress)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Company Name</label>
+                @Html.TextBoxFor(model => model.CompanyName, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.CompanyName)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Contact Number</label>
+                @Html.TextBoxFor(model => model.ContactNumber, new { @class = "textbox", @onkeypress = "return PreventKeyIsNotNumberic(event)" })
+                @Html.ValidationMessageFor(model => model.ContactNumber)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Address 1</label>
+                @Html.TextBoxFor(model => model.Address1, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.Address1)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Address 2</label>
+                @Html.TextBoxFor(model => model.Address2, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.Address2)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Town / City</label>
+                @Html.TextBoxFor(model => model.TownCity, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.TownCity)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Post Code / Zip</label>
+                @Html.TextBoxFor(model => model.PostCodeZip, new { @class = "textbox" })
+                @Html.ValidationMessageFor(model => model.PostCodeZip)
+            </div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    Country / Region</label>
+                @Html.DropDownListFor(model => model.CountryRegion, (IEnumerable<SelectListItem>)ViewBag.ListCountry, new { @class = "select", @title = "Choose Country" })
+            </div>
+            <div class="list_item"></div>
+            <div class="list_item">
+                <label class="label labeltxt">
+                    &nbsp;
+                </label>
+                @Html.ValidationSummary(true)
+                <input type="submit" value="Save" class="submit_save align-left" />
+            </div>
+        </div>
+    </div>
+    <div class="userdetail">
+        <div id="userdetail">
+            <h1>
+                Account Details
+            </h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br />
+                <br />
+                Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum
+                soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat
+                facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.<br />
+                <br />
+                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
+                laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
+                architecto beatae vitae dicta sunt explicabo.
+                <br />
+                <br />
+            </p>
+        </div>
+    </div>
+}

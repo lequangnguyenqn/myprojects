@@ -1,0 +1,35 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.ImportTrackModel
+@{
+    Layout = null;
+}
+
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Areas/Administrator/Content/Images/ico-catalog.png")" alt="" />
+        Sản phẩm nhập
+    </div>
+</div>
+
+@Html.Osd().HiddenPopupWindow("Cảnh Báo", Helpers.DeleteConfirmMessageBox("Bạn có thực sự muốn xóa không", @Url.Action("DeleteOrderDetail", "Order", new { area = "administrator" })).ToHtmlString())
+@(Html.Telerik().Grid<WeddingInvitation.Areas.Administrator.Models.ImportDetailModel>()
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(x => x.CategoryName).Title("Bộ")
+                .Width(150)
+                .Filterable(false);
+            columns.Bound(x => x.ProductName).Title("Sản Phẩm")
+                .Width(150)
+                .Filterable(false);
+            columns.Bound(x => x.AmountDisplay).Title("Số Lượng")
+                .Width(100)
+                .Filterable(false);
+            columns.Bound(x => x.Note).Title("Ghi Chú")
+                .Sortable(false)
+                .Filterable(false);
+        }).DataBinding(dataBinding => dataBinding.Ajax().Select("GridModelImportDetail", "ImportTrack", new { id = Model.ImportTrackId }))
+            .Groupable(grouping => grouping.Groups(groups =>
+                        {
+                            groups.Add(c => c.CategoryName);
+                        }).Visible(false))
+)

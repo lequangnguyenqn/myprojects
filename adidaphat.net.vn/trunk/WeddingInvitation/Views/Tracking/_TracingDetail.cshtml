@@ -1,0 +1,91 @@
+﻿@model WeddingInvitation.Models.TracingDetailModel
+@{
+    var linkShowDetail = "linkShowDetail" + Model.TrackingNumber.Replace(" ", "");
+    var divDetail = "divDetail" + Model.TrackingNumber.Replace(" ", "");
+}
+<style>
+    tr, td {
+    padding: 5px;
+}
+</style>
+<table width="100%" border="0" align="center" style="color: #303030; border: none; background: #E8E8E8" id="tbHeader">
+    <tbody><tr>
+               <td align="left">
+                   <label style="color: #CC6666;font-weight: bold;">
+                       Kết quả phát:</label>
+               </td>
+               <td style="color: #1445EB; font-weight: bold; display: none;">
+                   <input type="text" value="1">
+               </td>
+               <td style="color: #1445EB; font-weight: bold; display: none;">
+                   <input type="text" >
+               </td>
+           </tr>
+        <tr>
+            <td align="left" class="style1" style="color: #303030; font-weight: bold;">
+                Số vận đơn:
+            </td>
+            <td align="left" class="style1" style="color: #787878; font-weight: bold;">
+                <span class="labelStyle" >@Model.TrackingNumber</span>
+            </td>
+            <td align="left" class="style1" style="color: #303030; font-weight: bold;">
+                Ngày gửi
+            </td>
+            <td align="left" style="color: #787878; font-weight: bold;">
+                <span class="labelStyle">@Model.DateOfSending.ToString("H:mm - dd/MM/yyyy")</span>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" class="style1" style="color: #303030; font-weight: bold;">
+                Trạng thái:
+            </td>
+            <td align="left" style="color: #787878; font-weight: bold;">
+                <span class="labelStyle">@Model.StatusName</span>
+            </td>
+            <td align="left" class="style1" style="color: #303030; font-weight: bold;">
+                Người nhận:
+            </td>
+            <td align="left" style="color: #787878; font-weight: bold;">
+                <span class="labelStyle">@(!string.IsNullOrEmpty(Model.Receiver) ? (Model.Receiver + ", " + Model.ReceivedDate.Value.ToString("H:mm - dd/MM/yyyy")) : "")</span>
+            </td>
+        </tr>
+        <!--Begin : Lịch trình-->
+    </tbody>
+</table>
+<div style="padding-top: 10px;padding-bottom: 10px;"><a href="javascript:void(0);" id="@linkShowDetail">Chi tiết phát</a></div>
+<div id="@divDetail" style="display: none;">
+    <table style="width: 100%;" summary="2007 Major IT Companies' Profit" id="rounded-corner">
+        <thead>
+            <tr>
+                <th class="rounded-company" scope="col">Ngày Giờ</th>
+                <th class="rounded-q1" scope="col">Hành Trình</th>
+                <th class="rounded-q2" scope="col">Vị Trí</th>
+                <th class="rounded-q3" scope="col">Trạng Thái</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td class="rounded-foot-left" colspan="4"><em>Danh sách trên là chi tiết của quá trình chuyển phát.</em></td>
+                <td class="rounded-foot-right">&nbsp;</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in Model.Trackings)
+            {
+                <tr>
+                    <td>@item.DateOfSending.ToString("H:mm - dd/MM/yyyy")</td>
+                    <td>@item.DeliverToName</td>
+                    <td>@item.PostOfficeName</td>
+                    <td>@item.StatusName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@linkShowDetail").click(function () {
+            $("#@divDetail").toggle("slow");
+        });
+    });
+</script>

@@ -1,0 +1,73 @@
+﻿@model WeddingInvitation.Areas.Administrator.Models.MyOfficeModel
+@using (Html.BeginForm("Save", "MyOffice", FormMethod.Post))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Areas/Administrator/Content/images/ico-catalog.png")" alt="" />
+            @(Model.MyOfficeId > 0 ? "Sửa chi nhánh" : "Tạo mới chi nhánh")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="Save" tabindex="6" class="t-button">Lưu</button>
+            <a href="@Url.Action("index")" tabindex="8" class="t-button">Quay về</a>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(model => model.MyOfficeId)
+    <table width="99%">
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Thuộc kho")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StorageId, new SelectList(Model.Storages, "StorageId", "StorageName"), "-Chọn-")
+                @Html.ValidationMessageFor(model => model.StorageId, "Kho là bắt buộc.")
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Tên chi nhánh")
+                <span class="field_required">*</span>
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.OfficeName)
+                @Html.ValidationMessageFor(model => model.OfficeName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.Label("Là khách lẻ")
+            </td>
+            <td align="left">
+                @Html.CheckBoxFor(model => model.IsRetailCustomer)
+            </td>
+        </tr> 
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Địa chỉ")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.Address)
+                @Html.ValidationMessageFor(model => model.Address)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Số điện thoại")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.PhoneNumber)
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
+            </td>
+        </tr>
+        <tr>
+            <td width="100" class="adminTitle">
+                @Html.Label("Fax")
+            </td>
+            <td class="adminData">
+                @Html.TextBoxFor(model => model.Fax)
+                @Html.ValidationMessageFor(model => model.Fax)
+            </td>
+        </tr>
+    </table>
+}

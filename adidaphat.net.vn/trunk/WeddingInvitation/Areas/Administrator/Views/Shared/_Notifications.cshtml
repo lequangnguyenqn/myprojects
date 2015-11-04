@@ -1,0 +1,21 @@
+﻿@using WeddingInvitation.Infrastructure.Mvc;
+@{
+    var successMessages = this.GetSuccessNotification();
+    var errorMessages = this.GetErrorNotification();
+}
+@foreach (var message in successMessages)
+{
+    <div style="font-size:21px; font-weight:bold;" class="messageBox messageBoxSuccess">
+        @message
+    </div>
+    <div class="clear">
+    </div>
+}
+@foreach (var message in errorMessages)
+{
+    <div style="font-size:21px; font-weight:bold;"  class="messageBox messageBoxError">
+        @message
+    </div>
+    <div class="clear">
+    </div>
+}
